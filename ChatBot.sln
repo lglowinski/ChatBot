@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.Api", "ChatBot.Api\ChatBot.Api.csproj", "{6887DD6C-3DE9-40CB-AFAA-C2FAAAC60107}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.Application", "ChatBot.Application\ChatBot.Application.csproj", "{361983C7-BDE6-4F78-B514-7F3C4A52DBFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.Domain", "ChatBot.Domain\ChatBot.Domain.csproj", "{05D6A8E4-5263-4AB0-9F28-92BDAB480D0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.Contracts", "ChatBot.Contracts\ChatBot.Contracts.csproj", "{0A972218-A71A-4073-8B1E-7BEAC071980D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6887DD6C-3DE9-40CB-AFAA-C2FAAAC60107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6887DD6C-3DE9-40CB-AFAA-C2FAAAC60107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6887DD6C-3DE9-40CB-AFAA-C2FAAAC60107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6887DD6C-3DE9-40CB-AFAA-C2FAAAC60107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{361983C7-BDE6-4F78-B514-7F3C4A52DBFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{361983C7-BDE6-4F78-B514-7F3C4A52DBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{361983C7-BDE6-4F78-B514-7F3C4A52DBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{361983C7-BDE6-4F78-B514-7F3C4A52DBFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D6A8E4-5263-4AB0-9F28-92BDAB480D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D6A8E4-5263-4AB0-9F28-92BDAB480D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D6A8E4-5263-4AB0-9F28-92BDAB480D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D6A8E4-5263-4AB0-9F28-92BDAB480D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A972218-A71A-4073-8B1E-7BEAC071980D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A972218-A71A-4073-8B1E-7BEAC071980D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A972218-A71A-4073-8B1E-7BEAC071980D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A972218-A71A-4073-8B1E-7BEAC071980D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
