@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>955c946f-fb34-47cb-9d12-240e4ad5e03f</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\AspireOrchestrator\AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\..\..\ChatBot.OpenAiFacade\ChatBot.OpenAiFacade.csproj" />
       <ProjectReference Include="..\ChatBot.Application\ChatBot.Application.csproj" />
       <ProjectReference Include="..\ChatBot.Contracts\ChatBot.Contracts.csproj" />
     </ItemGroup>

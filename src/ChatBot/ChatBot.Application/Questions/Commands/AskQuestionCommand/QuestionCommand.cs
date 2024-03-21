@@ -3,6 +3,4 @@ using MediatR;
 
 namespace ChatBot.Application.Questions.Commands.AskQuestionCommand;
 
-public class QuestionCommand(string question) : IRequest<ErrorOr<Answer>>
-{
-}
+public record QuestionCommand(string Question) : IRequest<ErrorOr<Answer>>;

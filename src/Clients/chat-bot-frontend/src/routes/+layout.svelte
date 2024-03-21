@@ -1,17 +1,16 @@
 <script>
-	import Header from './Header.svelte';
-	import './styles.css';
+	import '../app.css';
+	import Header from '../components/Navbar/Navbar.svelte';
 </script>
 
-<div class="app">
+<div class="app bg-white dark:bg-[#121C24] text-black
+dark:text-white">
 	<Header />
-
 	<main>
-		<slot />
+		<slot></slot>
 	</main>
-
-	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
+	<footer class="mb-1">
+		<p class="text-[#8A9EBF]">Copyright &copy; 2024. Created by <a href="https://lglowinski.pl" target="_blank">Lukasz Glowinski Software</a> - All rights reserved</p>
 	</footer>
 </div>
 
@@ -28,7 +27,6 @@
 		flex-direction: column;
 		padding: 1rem;
 		width: 100%;
-		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
@@ -38,7 +36,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding: 12px;
+		padding: 15px;
 	}
 
 	footer a {

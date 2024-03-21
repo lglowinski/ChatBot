@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Hosting;
-using Aspire.Hosting;
 
 namespace AspireOrchestrator.AppHost;
 

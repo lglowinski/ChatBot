@@ -1,0 +1,15 @@
+{
+  "name": "AvatarUI",
+  "short_name": "AvUI",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#121C24",
+  "description": "A avatar which answers questions",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "12x15",
+      "type": "image/png"
+    }
+  ]
+}
