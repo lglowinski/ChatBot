@@ -11,5 +11,7 @@ public class QuestionConfigurations : IEntityTypeConfiguration<Question>
         builder.HasKey(q => q.Id);
 
         builder.HasIndex(q => q.CreatedAt);
+
+        builder.HasIndex(q => q.HelpfulCount);
     }
 }

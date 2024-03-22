@@ -1,45 +1,22 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
-
-    interface AskQuestionRequest{
-        question: string
-    }
-
-    interface AskQuestionResponse{
-        id: string,
-        title: string,
-        answer: string,
-        upvotes: number,
-        downvotes: number
-    }
+    import {goto} from "$app/navigation";
+    import {ask} from '../../lib/api'
 
     let question = "";
+    let disabled = false;
 
     const submitQuestion = async (): Promise<void> => {
-        if(question.trim().length > 0){
-            console.log(`Question asked: ${question}`)
-            const request: AskQuestionRequest = {
-                question: question
-            };
+        disabled = true;
+        if (question.trim().length > 0) {
+            try {
+                const id = await ask(question);
+                navigateToQuestion(id);
+            } finally {
+                question = "";
+                disabled = false;
+            }
 
-            console.log(import.meta.env.VITE_API_URL)
 
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/questions`, {
-                method: 'POST',
-                body: JSON.stringify(request),
-                headers: {
-                    'Accept': 'application/json, text/plain',
-                    'Content-Type': 'application/json;charset=UTF-8'
-                },
-            })
-
-            const response: AskQuestionResponse = await res.json();
-
-            console.log(response);
-
-            navigateToQuestion(response.id);
-
-            question = "";
         }
     }
 
@@ -50,7 +27,7 @@
 
 <div class="w-full flex justify-center items-center pt-5">
     <div class="relative text-white mx-auto text-center overflow-hidden max-h-[480px] max-w-[928px] w-2/3 opacity-90">
-        <img src="banner.webp" alt="Banner Background" class="w-full h-full object-cover absolute top-0 left-0 z-0" />
+        <img src="banner.webp" alt="Banner Background" class="w-full h-full object-cover absolute top-0 left-0 z-0"/>
         <div class="relative z-10 p-12 md:p-24 justify-center items-center">
             <h1 class="text-4xl font-bold mb-4 font-48">Welcome to AvatarUI</h1>
             <p class="text-xl mb-8">Ask anything. Get answers.</p>
@@ -75,7 +52,7 @@
                 >
                 <button class="absolute inset-y-0 right-0 mr-1 mt-1 mb-1 flex items-center bg-[#F5C754] text-gray-900 text-sm font-bold px-4
                 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-10"
-                on:click={submitQuestion}>
+                        on:click={submitQuestion} disabled='{disabled}'>
                     Submit
                 </button>
             </div>

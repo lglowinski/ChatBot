@@ -1,31 +1,6 @@
 <script lang="ts">
-    import {onMount} from 'svelte';
-
-    type Question = {
-        id: string;
-        title: string;
-        summary: string;
-        createdAt: Date;
-    };
-
-    let questions: Question[] = [];
-
-    async function fetchQuestions() {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/questions?orderBy=CreatedAt&take=10`);
-        if (response.ok) {
-            const data = await response.json();
-            questions = data.questions.map((q) => ({
-                ...q,
-                createdAt: new Date(q.createdAt) // Konwertuj string na obiekt Date
-            }));
-        } else {
-            console.error('Failed to fetch questions:', response.statusText);
-        }
-    }
-
-    onMount(async () => {
-        await fetchQuestions();
-    });
+    export let title : string;
+    export let questions: QuestionListElement[] = [];
 </script>
 
 <main>
@@ -35,7 +10,7 @@
 <aside>
     <section>
         <div class="max-w-5xl mx-auto">
-            <h2 class="text-2xl font-semibold mb-5">Recent questions</h2>
+            <h2 class="text-2xl font-semibold mb-5">{title}</h2>
             <div class="space-y-0">
                 {#each questions as question}
                     <div class="bg-[#121C24] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">

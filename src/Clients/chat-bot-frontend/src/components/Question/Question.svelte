@@ -1,5 +1,7 @@
 <script lang="ts">
-    export let question: { title: string; answer:string; upvotes:number; downvotes: number };
+    import { like, markHelpful } from "../../lib/api";
+
+    export let question: { id: string, title: string; answer:string; upvotes:number; downvotes: number };
 
     let upvotes = question.upvotes;
     let downvotes = question.downvotes;
@@ -10,34 +12,43 @@
     let helpful = false;
     $: handleChange(helpful);
 
+    let liked: boolean = false;
+    let disliked: boolean = false;
 
-    function handleUpvote() {
+    async function handleUpvote() : Promise<void> {
         if(!alreadyUpvoted){
             upvotes += 1;
+            liked = true
             alreadyUpvoted = true;
         }
 
         if(alreadyDownvoted){
             downvotes -= 1;
+            disliked = false;
             alreadyDownvoted = false;
         }
 
+        await like(question.id, liked, disliked);
     }
 
-    function handleDownvote() {
+    async function handleDownvote() : Promise<void> {
         if(!alreadyDownvoted){
             downvotes += 1;
+            disliked = true;
             alreadyDownvoted = true;
         }
 
         if(alreadyUpvoted){
             upvotes -= 1;
+            liked=false;
             alreadyUpvoted = false;
         }
+        await like(question.id, liked, disliked);
     }
 
-    function handleChange(helpful : boolean){
-        console.log(helpful)
+    async function handleChange(helpful : boolean) : Promise<void>{
+        if(helpful)
+            await markHelpful(question.id);
     }
 
 </script>
@@ -49,9 +60,9 @@
 
 <aside>
     <article class="shadow rounded-lg p-4 max-w-2xl mx-auto">
-        <a class="flex items-center  w-1/2 py-2
+        <a href="javascript: history.go(-1)" class="flex items-center  w-1/2 py-2
         transition-colors duration-200 rounded-lg gap-x-2 sm:w-auto d
-        ark:hover:bg-gray-800 mb-8" href="/">
+        ark:hover:bg-gray-800 mb-8">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 18L6 12L12 6" stroke="#B6CCF7" stroke-width="2"/>
                 <path d="M18 18L12 12L18 6" stroke="#B6CCF7" stroke-width="2"/>

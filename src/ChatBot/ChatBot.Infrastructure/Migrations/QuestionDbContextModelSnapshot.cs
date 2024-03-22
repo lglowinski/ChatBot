@@ -37,6 +37,9 @@ namespace ChatBot.Infrastructure.Migrations
                     b.Property<int>("Downvotes")
                         .HasColumnType("int");
 
+                    b.Property<int>("HelpfulCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Summary")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -55,6 +58,8 @@ namespace ChatBot.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
+
+                    b.HasIndex("HelpfulCount");
 
                     b.ToTable("Questions");
                 });

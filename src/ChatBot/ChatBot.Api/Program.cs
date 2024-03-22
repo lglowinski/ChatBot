@@ -1,5 +1,6 @@
 using ChatBot.Api.Composition;
 using ChatBot.Api.Endpoints.Internal;
+using ChatBot.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ app.UseEndpoints<Program>();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseRateLimiter();
+app.AddInfrastructureMiddleware();
 
 app.Run();
 

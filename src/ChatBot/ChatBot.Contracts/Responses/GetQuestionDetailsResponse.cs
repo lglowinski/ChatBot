@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 namespace ChatBot.Contracts.Responses;
 
 [DataContract]
-public record GetQuestionDetailsResponse([property: DataMember(Name = "title")] string Title,
+public record GetQuestionDetailsResponse([property: DataMember(Name = "id")] string Id, [property: DataMember(Name = "title")] string Title,
     [property: DataMember(Name = "answer")]
     string Answer,
     [property: DataMember(Name = "upvotes")]

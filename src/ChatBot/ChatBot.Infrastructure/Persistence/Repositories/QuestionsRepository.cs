@@ -8,7 +8,9 @@ public class QuestionsRepository(QuestionDbContext dbContext) : IQuestionsReposi
 {
     public async Task<Question?> GetQuestionByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Questions.FirstOrDefaultAsync(q => q.Id == id, cancellationToken: cancellationToken);
+        return await dbContext
+            .Questions
+            .FirstOrDefaultAsync(q => q.Id == id, cancellationToken: cancellationToken);
     }
     public async Task AddQuestionAsync(Question question, CancellationToken cancellationToken = default)
     {
@@ -16,28 +18,28 @@ public class QuestionsRepository(QuestionDbContext dbContext) : IQuestionsReposi
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public Task UpdateQuestionAsync(Question question, CancellationToken cancellationToken = default)
+    public async Task UpdateQuestionAsync(Question question, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        dbContext.Questions.Update(question);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<List<Question>> SearchQuestions(string? searchTerm = null, string? orderBy = null, int count = 10,
+    public Task<List<Question>> SearchQuestions(string? searchTerm = null, string? orderBy = null, int count = 10, int page = 0,
         CancellationToken cancellationToken = default)
     {
         var questions = dbContext.Questions.AsQueryable();
         if (orderBy is not null)
             questions = questions.OrderByDescending(q => EF.Property<object>(q, orderBy));
-        
-        if(searchTerm is not null)
-            questions = questions
-                .Where(q => EF.Functions.Like(q.Title, $"%{searchTerm}%") 
-                            || EF.Functions.Like(q.Summary, $"%{searchTerm}%"));
-        
-        return questions.Take(count).ToListAsync(cancellationToken);
-    }
 
-    public Task<List<Question>> ListLatestQuestionsAsync(string? searchTerm = null, int count = 10, CancellationToken cancellationToken = default)
-    {
-        return dbContext.Questions.OrderByDescending(q => q.CreatedAt).Take(count).ToListAsync(cancellationToken);
+        if (searchTerm is not null)
+        {
+            questions = questions
+                .Where(q => 
+                            EF.Functions.Like(q.Title, $"%{searchTerm}%")
+                            || EF.Functions.Like(q.Summary, $"%{searchTerm}%")
+                            || q.Tags.Any(t => EF.Functions.Like(t, $"%{searchTerm}%")));
+        }
+        
+        return questions.Skip(page * count).Take(count).ToListAsync(cancellationToken);
     }
 }

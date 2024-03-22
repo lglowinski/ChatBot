@@ -14,7 +14,7 @@ public class ListQuestionQueryHandler(IQuestionsRepository repository, IVerifier
             return verificationResult.FirstError;
         
         var questions =
-            await repository.SearchQuestions(request.SearchTerm, request.OrderBy, request.Take, cancellationToken);
+            await repository.SearchQuestions(request.SearchTerm, request.OrderBy, request.Take, request.Page, cancellationToken);
 
         return questions.Select(ConvertToSummary).ToList();
     }
