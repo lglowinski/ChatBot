@@ -1,4 +1,5 @@
 using ChatBot.Api.Endpoints.Internal;
+using ChatBot.Api.Settings;
 using ChatBot.Application.Questions.Commands.AskQuestionCommand;
 using ChatBot.Application.Questions.Commands.GetQuestionQuery;
 using ChatBot.Application.Questions.Queries.ListQuestionsQuery;
@@ -15,7 +16,7 @@ public class AskQuestionsEndpoint : IEndpoints
     private const string Tag = "Questions";
     private const string BaseRoute = "/api/questions";
     
-    public static void DefineEndpoints(IEndpointRouteBuilder app)
+    public static void DefineEndpoints(IEndpointRouteBuilder app, RateLimitingSettings rateLimitingSettings)
     {
         var builder = app.MapGroup(BaseRoute);
 
@@ -25,6 +26,7 @@ public class AskQuestionsEndpoint : IEndpoints
             .WithDescription("Answers question defined by user")
             .Produces<CreateQuestionResponse>()
             .WithTags(Tag)
+            .RequireRateLimiting(rateLimitingSettings.PolicyName)
             .AllowAnonymous();
         
         builder.MapGet("/{id}", GetQuestionDetailsAsync)

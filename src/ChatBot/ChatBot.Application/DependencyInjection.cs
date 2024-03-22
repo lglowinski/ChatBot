@@ -15,7 +15,7 @@ public static class DependencyInjection
         return services;
     }
     
-    public static IServiceCollection AddCommon(this IServiceCollection services)
+    private static IServiceCollection AddCommon(this IServiceCollection services)
     {
         services.AddScoped<IVerifier<IOrderable>, OrdererableVerifier>();
 

@@ -1,6 +1,5 @@
 using System.Net.Http.Headers;
 using ChatBot.Application;
-using ChatBot.Domain;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatBot.OpenAiFacade;

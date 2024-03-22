@@ -4,5 +4,5 @@ namespace ChatBot.Application;
 
 public interface IReasoningService
 {
-    public Task<Answer> AskQuestionAsync(string question, CancellationToken cancellationToken = default);
+    public Task<AskQuestionResponse> AskQuestionAsync(string question, CancellationToken cancellationToken = default);
 }

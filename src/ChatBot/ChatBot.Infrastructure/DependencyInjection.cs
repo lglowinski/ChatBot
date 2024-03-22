@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using ChatBot.Application;
 using ChatBot.Domain;
 using ChatBot.Infrastructure.Persistence;
@@ -19,7 +18,7 @@ public static class DependencyInjection
             .AddPersistence();
     }
 
-    public static IHostApplicationBuilder AddDbContext(this IHostApplicationBuilder builder, string db)
+    private static IHostApplicationBuilder AddDbContext(this IHostApplicationBuilder builder, string db)
     {
         builder.AddSqlServerDbContext<QuestionDbContext>(db, configureDbContextOptions: options =>
         {
@@ -31,8 +30,8 @@ public static class DependencyInjection
 
         return builder;
     }
-    
-    public static IHostApplicationBuilder AddPersistence(this IHostApplicationBuilder builder)
+
+    private static IHostApplicationBuilder AddPersistence(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<ITimeProvider, SystemTimeProvider>();
 
@@ -40,8 +39,8 @@ public static class DependencyInjection
         
         return builder;
     }
-    
-    public static IHostApplicationBuilder AddRepositories(this IHostApplicationBuilder builder)
+
+    private static IHostApplicationBuilder AddRepositories(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<IQuestionsRepository, QuestionsRepository>();
 

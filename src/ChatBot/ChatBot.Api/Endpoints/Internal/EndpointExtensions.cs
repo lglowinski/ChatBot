@@ -1,4 +1,5 @@
 using System.Reflection;
+using ChatBot.Api.Settings;
 
 namespace ChatBot.Api.Endpoints.Internal;
 
@@ -8,9 +9,9 @@ public static class EndpointExtensions
     {
         AddEndpoints(services, typeof(TTypeMarker), configuration);
     }
-    
+
     public static void AddEndpoints(this IServiceCollection services,
-        Type typeMarker, 
+        Type typeMarker,
         IConfiguration configuration)
     {
         var endpointTypes = GetEndpointsFromContainingAssembly(typeMarker);
@@ -25,17 +26,18 @@ public static class EndpointExtensions
     {
         UseEndpoints(app, typeof(TTypeMarker));
     }
-    
+
     public static void UseEndpoints(this IApplicationBuilder app, Type typeMarker)
     {
         var endpointTypes = GetEndpointsFromContainingAssembly(typeMarker);
 
         foreach (var endpointType in endpointTypes)
         {
-            endpointType.GetMethod(nameof(IEndpoints.DefineEndpoints))!.Invoke(null, [app]);
+            endpointType.GetMethod(nameof(IEndpoints.DefineEndpoints))!.Invoke(null,
+                [app, app.ApplicationServices.GetRequiredService<RateLimitingSettings>()]);
         }
     }
-    
+
     private static IEnumerable<TypeInfo> GetEndpointsFromContainingAssembly(Type typeMarker)
     {
         return typeMarker
