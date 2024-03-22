@@ -20,6 +20,10 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "chat-bot-frontend", "src\Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot\ChatBot.OpenAiFacade", "src\ChatBot\ChatBot.OpenAiFacade\ChatBot.OpenAiFacade.csproj", "{720DE5B0-C454-4F17-ADBE-A01F945FCD04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.Infrastructure", "src\ChatBot\ChatBot.Infrastructure\ChatBot.Infrastructure.csproj", "{6F3734F2-1DF1-4C0C-8BD7-EF044EAA4061}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.MigrationService", "ChatBot.MigrationService\ChatBot.MigrationService.csproj", "{5B1197F9-ED62-49D3-9143-804D1B124B2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +58,14 @@ Global
 		{720DE5B0-C454-4F17-ADBE-A01F945FCD04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{720DE5B0-C454-4F17-ADBE-A01F945FCD04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{720DE5B0-C454-4F17-ADBE-A01F945FCD04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F3734F2-1DF1-4C0C-8BD7-EF044EAA4061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3734F2-1DF1-4C0C-8BD7-EF044EAA4061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3734F2-1DF1-4C0C-8BD7-EF044EAA4061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3734F2-1DF1-4C0C-8BD7-EF044EAA4061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B1197F9-ED62-49D3-9143-804D1B124B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B1197F9-ED62-49D3-9143-804D1B124B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B1197F9-ED62-49D3-9143-804D1B124B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B1197F9-ED62-49D3-9143-804D1B124B2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{361983C7-BDE6-4F78-B514-7F3C4A52DBFD} = {23EA62D9-6231-4494-952C-CE9F4B0FCE9D}
@@ -62,5 +74,6 @@ Global
 		{0A972218-A71A-4073-8B1E-7BEAC071980D} = {23EA62D9-6231-4494-952C-CE9F4B0FCE9D}
 		{1D5F9C22-57BC-4A29-8528-2B5B775C37F6} = {0E4C8780-D445-49B6-894A-DD5AE311257A}
 		{720DE5B0-C454-4F17-ADBE-A01F945FCD04} = {23EA62D9-6231-4494-952C-CE9F4B0FCE9D}
+		{6F3734F2-1DF1-4C0C-8BD7-EF044EAA4061} = {23EA62D9-6231-4494-952C-CE9F4B0FCE9D}
 	EndGlobalSection
 EndGlobal

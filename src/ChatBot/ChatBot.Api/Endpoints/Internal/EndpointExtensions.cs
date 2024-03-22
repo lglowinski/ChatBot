@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace ChatBot.Api.Endpoints;
+namespace ChatBot.Api.Endpoints.Internal;
 
 public static class EndpointExtensions
 {

@@ -1,13 +1,50 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+
+    interface AskQuestionRequest{
+        question: string
+    }
+
+    interface AskQuestionResponse{
+        id: string,
+        title: string,
+        answer: string,
+        upvotes: number,
+        downvotes: number
+    }
 
     let question = "";
 
     const submitQuestion = async (): Promise<void> => {
         if(question.trim().length > 0){
             console.log(`Question asked: ${question}`)
-            //TODO: Send request
+            const request: AskQuestionRequest = {
+                question: question
+            };
+
+            console.log(import.meta.env.VITE_API_URL)
+
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/questions`, {
+                method: 'POST',
+                body: JSON.stringify(request),
+                headers: {
+                    'Accept': 'application/json, text/plain',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+            })
+
+            const response: AskQuestionResponse = await res.json();
+
+            console.log(response);
+
+            navigateToQuestion(response.id);
+
             question = "";
         }
+    }
+
+    const navigateToQuestion = (id: string) => {
+        goto(`/questions/${id}`)
     }
 </script>
 

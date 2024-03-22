@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
+using ChatBot.Application;
+using ChatBot.Application.Questions.Commands.AskQuestionCommand;
 using ChatBot.Domain;
 using ChatBot.OpenAiFacade.Requests;
 using ChatBot.OpenAiFacade.Responses;
@@ -8,12 +10,16 @@ namespace ChatBot.OpenAiFacade;
 
 public class OpenAiClient : HttpClient, IReasoningService
 {
-    public async Task<Answer> AskQuestionAsync(Question question, CancellationToken cancellationToken = default)
+    public async Task<Answer> AskQuestionAsync(string question, CancellationToken cancellationToken = default)
     {
         var request = new OpenAiRequestBuilder()
             .WithModel()
-            .WithSystemDefinitions(SystemDefinitions.Default)
-            .WithPrompt(question.TextValue)
+            .WithSystemDefinitions([
+                SystemDefinitions.Default, 
+                SystemDefinitions.TagsDefinition, 
+                SystemDefinitions.SummaryDefinition, 
+                SystemDefinitions.ResponseDefinition])
+            .WithPrompt(question)
             .Build();
 
         var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
@@ -26,6 +32,6 @@ public class OpenAiClient : HttpClient, IReasoningService
             await JsonSerializer.DeserializeAsync<OpenAiResponse>(
                 await response.Content.ReadAsStreamAsync(cancellationToken), cancellationToken: cancellationToken);
         
-        return new Answer(openAiResponse.Choices[0].Message.Content);
+        return JsonSerializer.Deserialize<Answer>(openAiResponse.Choices[0].Message.Content);
     }
 }

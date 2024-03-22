@@ -9,10 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.3"/>
+        <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.4"/>
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\ChatBot.MigrationService\ChatBot.MigrationService.csproj" />
       <ProjectReference Include="..\..\src\ChatBot\ChatBot.Api\ChatBot.Api.csproj" />
     </ItemGroup>
 

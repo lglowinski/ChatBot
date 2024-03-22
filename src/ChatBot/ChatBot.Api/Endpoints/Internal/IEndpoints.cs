@@ -1,4 +1,4 @@
-namespace ChatBot.Api.Endpoints;
+namespace ChatBot.Api.Endpoints.Internal;
 
 public interface IEndpoints
 {

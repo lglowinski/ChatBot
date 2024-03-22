@@ -1,11 +1,16 @@
+using System.Text.Json.Serialization;
+
 namespace ChatBot.Application.Questions.Commands.AskQuestionCommand;
 
-public class Answer
+[method: JsonConstructor]
+public class Answer(string value, IEnumerable<string> tags, string summary)
 {
-    public string Value { get; }
+    [JsonPropertyName("answer")]
+    public string Value { get; } = value;
 
-    public Answer(string value)
-    {
-        Value = value;
-    }
+    [JsonPropertyName("tags")]
+    public IEnumerable<string> Tags { get; } = tags;
+
+    [JsonPropertyName("summary")]
+    public string Summary { get; } = summary;
 }

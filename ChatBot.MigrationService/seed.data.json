@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "2cffc82c-a631-4add-9abd-b45338198dd7",
+    "Title": "How many seconds is in a day",
+    "Answer": "There are 86,400 seconds in a day.",
+    "Upvotes": 420,
+    "Downvotes": 69,
+    "Tags": ["time","measurement","day"],
+    "CreatedAt": "2024-03-22T00:11:36.9875695+00:00",
+    "Summary": "The number of seconds in a day"
+  },
+  {
+    "Id": "9f99dd89-c8e5-405c-afda-d404ad7952fd",
+    "Title": "Jaka jest roznica miedzy pianinem a fortepianem",
+    "Answer": "Pianino i fortepian to w zasadzie te same instrumenty. Termin 'pianino' często stosuje się do małych, krótszych i lżejszych modeli fortepianów, podczas gdy 'fortepian' może być używany jako ogólna nazwa dla całej rodziny instrumentów klawiszowych z młoteczkami.",
+    "Upvotes": 54,
+    "Downvotes": 4,
+    "Tags": ["pianino","fortepian","instrumenty klawiszowe"],
+    "CreatedAt": "2024-03-22T00:12:03.8125695+00:00",
+    "Summary": "Różnica między pianinem a fortepianem"
+  },
+  {
+    "Id": "a0ac5410-767c-4b42-864a-3bb6fa1f00f4",
+    "Title": "How do I start campfire?",
+    "Answer": "To start a campfire, you will need tinder, kindling, and fuel wood. Begin by arranging tinder such as dry leaves, bark, or paper at the center of your fire pit. Add kindling such as small twigs and branches in a pyramid shape over the tinder. Light the tinder with matches or a lighter, and once the kindling catches fire, gradually add larger pieces of fuel wood to build up the fire.",
+    "Upvotes": 50,
+    "Downvotes": 5,
+    "Tags": ["camping","fire-starting","outdoor"],
+    "CreatedAt": "2024-03-21T23:51:45.8889692+00:00",
+    "Summary": "Tips for starting a campfire"
+  },
+  {
+    "Id": "b48788a2-cafe-482b-8d14-161459e3e5c2",
+    "Title": "How do I check weather?",
+    "Answer": "There are several ways to check the weather, such as using weather websites, mobile apps, or tuning in to local TV or radio stations for weather updates. You can also utilize weather instruments like thermometers, barometers, and hygrometers to monitor weather conditions.",
+    "Upvotes": 4,
+    "Downvotes": 1,
+    "Tags": ["Weather","Forecasting","Instruments"],
+    "CreatedAt": "2024-03-21T23:38:58.2277569+00:00",
+    "Summary": "Different methods to check the weather"
+  }
+]

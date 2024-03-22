@@ -3,10 +3,7 @@ namespace ChatBot.OpenAiFacade.Requests;
 public class OpenAiRequestBuilder
 {
     private string _model;
-    private List<Message> _messages = new();
-    public OpenAiRequestBuilder()
-    {
-    }
+    private readonly List<Message> _messages = [];
     
     public OpenAiRequestBuilder WithModel(string model = "gpt-3.5-turbo")
     {

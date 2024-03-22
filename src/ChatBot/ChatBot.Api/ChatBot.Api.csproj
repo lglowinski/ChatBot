@@ -4,7 +4,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <UserSecretsId>955c946f-fb34-47cb-9d12-240e4ad5e03f</UserSecretsId>
     </PropertyGroup>
@@ -12,6 +11,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,7 +22,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\AspireOrchestrator\AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj" />
-      <ProjectReference Include="..\..\..\ChatBot.OpenAiFacade\ChatBot.OpenAiFacade.csproj" />
+      <ProjectReference Include="..\ChatBot.Infrastructure\ChatBot.Infrastructure.csproj" />
+      <ProjectReference Include="..\ChatBot.OpenAiFacade\ChatBot.OpenAiFacade.csproj" />
       <ProjectReference Include="..\ChatBot.Application\ChatBot.Application.csproj" />
       <ProjectReference Include="..\ChatBot.Contracts\ChatBot.Contracts.csproj" />
     </ItemGroup>
