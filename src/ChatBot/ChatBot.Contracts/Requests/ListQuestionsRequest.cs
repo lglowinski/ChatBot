@@ -11,6 +11,8 @@ public class ListQuestionsRequest
     [DataMember(Name = "searchTerm")]
     public string? SearchTerm { get; set; }
     
-    [DataMember(Name = "searchTerm")]
+    [DataMember(Name = "orderBy")]
     public string? OrderBy { get; set; }
+    [DataMember(Name = "page")]
+    public int? Page { get; set; }
 }

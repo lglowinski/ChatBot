@@ -10,4 +10,5 @@ public class ListQuestionQuery : IRequest<ErrorOr<List<QuestionSummary>>>, IOrde
     public string? SearchTerm { get; init; }
 
     public string? OrderBy { get; set; }
+    public int Page { get; set; } = 0;
 }

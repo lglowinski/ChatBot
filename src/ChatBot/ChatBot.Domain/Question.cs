@@ -12,6 +12,7 @@ public class Question
     public List<string> Tags { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
     public string Summary { get; init; }
+    public int HelpfulCount { get; set; }
     
     public Question(
         string id,
@@ -29,6 +30,7 @@ public class Question
         Summary = summary;
         Downvotes = 0;
         Upvotes = 0;
+        HelpfulCount = 0;
     }
 
     [JsonConstructor]
@@ -39,11 +41,13 @@ public class Question
         int upvotes,
         int downvotes,
         List<string> tags,
+        int helpfulCount,
         DateTimeOffset createdAt,
         string summary) : this(id, title, answer, tags, createdAt, summary)
     {
         Upvotes = upvotes;
         Downvotes = downvotes;
+        HelpfulCount = helpfulCount;
     }
 
     public void Upvote()
@@ -54,5 +58,10 @@ public class Question
     public void Downvote()
     {
         Downvotes++;
+    }
+
+    public void Helped()
+    {
+        HelpfulCount++;
     }
 }
