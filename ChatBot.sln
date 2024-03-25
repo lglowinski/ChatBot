@@ -10,9 +10,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot\ChatBot.Contracts",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChatBot.WebApi", "ChatBot.WebApi", "{23EA62D9-6231-4494-952C-CE9F4B0FCE9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireOrchestrator.AppHost", "AspireOrchestrator\AspireOrchestrator.AppHost\AspireOrchestrator.AppHost.csproj", "{BD448BB6-FE0D-4064-A95B-4B9AC844C232}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireOrchestrator.AppHost", "AspireOrchestrator.AppHost\AspireOrchestrator.AppHost.csproj", "{BD448BB6-FE0D-4064-A95B-4B9AC844C232}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireOrchestrator.ServiceDefaults", "AspireOrchestrator\AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj", "{1284ABE6-C315-423B-A976-D084EB0B4DF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireOrchestrator.ServiceDefaults", "AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj", "{1284ABE6-C315-423B-A976-D084EB0B4DF2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChatBot.Frontend", "ChatBot.Frontend", "{0E4C8780-D445-49B6-894A-DD5AE311257A}"
 EndProject
