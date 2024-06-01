@@ -31,19 +31,26 @@ interface LikeQuestionRequest{
     disliked: boolean
 }
 
-const BASE_URL = `${import.meta.env.VITE_API_URL}/api`
+const BASE_URL = `api`
 
 export async function search(query: string): Promise<QuestionListResponse> {
-    const response = await fetch(`${BASE_URL}/questions?${query}`);
+    console.log("1410");
+    const response = await fetch(`/api/questions?${query}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
     return response.json();
 }
 
-export async function details(id: string): Promise<QuestionDetails> {
-    const response = await fetch(`${BASE_URL}/questions/${id}`);
+export async function details(id: string, eventFetch: {
+    (input: (string | URL | globalThis.Request), init?: RequestInit): Promise<Response>;
+    (input: (RequestInfo | URL), init?: RequestInit): Promise<Response>;
+    (input: (RequestInfo | URL), init?: RequestInit): Promise<Response>
+}): Promise<QuestionDetails> {
+
+    const response = await eventFetch(`/api/questions/${id}`);
     if (!response.ok) {
+        console.log(response);
         throw new Error('Network response was not ok');
     }
     return response.json();
@@ -54,7 +61,7 @@ export async function ask(question: string): Promise<string> {
         question: question
     };
 
-    const res = await fetch(`${BASE_URL}/questions`, {
+    const res = await fetch(`/api/questions`, {
         method: 'POST',
         body: JSON.stringify(request),
         headers: {
@@ -74,7 +81,7 @@ export async function like(id: string, liked: boolean, disliked:boolean) : Promi
         disliked: disliked
     };
 
-    const response = await fetch(`${BASE_URL}/questions/${id}/likes`, {
+    const response = await fetch(`/api/questions/${id}/likes`, {
         method: 'PUT',
         body: JSON.stringify(request),
         headers: {
@@ -90,7 +97,7 @@ export async function like(id: string, liked: boolean, disliked:boolean) : Promi
 }
 
 export async function markHelpful(id: string) : Promise<void> {
-    const response = await fetch(`${BASE_URL}/questions/${id}/helpful`, {
+    const response = await fetch(`/api/questions/${id}/helpful`, {
         method: 'PUT',
         headers: {
             'Accept': '*/*',

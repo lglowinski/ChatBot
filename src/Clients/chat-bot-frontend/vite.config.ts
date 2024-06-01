@@ -8,6 +8,9 @@ export default defineConfig({
 		port: parseInt(process.env.PORT ?? "5173"),
 		headers: {
 			'Content-Security-Policy-Report-Only': "default-src 'self' ; report-uri /"
+		},
+		proxy: {
+			'/api': process.env.services__api__https__0 || process.env.services__api__http__0
 		}
 	}
 });
