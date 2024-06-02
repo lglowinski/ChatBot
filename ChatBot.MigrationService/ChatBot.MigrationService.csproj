@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-ChatBot.MigrationService-D35059FA-79FC-48B6-A8C4-82FE93E0F3B2</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,6 +20,9 @@
 
     <ItemGroup>
       <Content Remove="seed.data.json" />
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
       <EmbeddedResource Include="seed.data.json" />
     </ItemGroup>
 </Project>
