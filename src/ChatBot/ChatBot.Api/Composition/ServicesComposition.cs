@@ -22,8 +22,10 @@ public static class ServicesComposition
     
     public static IServiceCollection RegisterServices(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
+        var parameters = configuration.GetSection("Parameters");
+        
         var openAiSettings = new OpenAiSettings();
-        configuration.GetSection(nameof(OpenAiSettings)).Bind(openAiSettings);
+        parameters.GetSection(nameof(OpenAiSettings)).Bind(openAiSettings);
         
         var rateLimitingSettings = new RateLimitingSettings();
         configuration.GetSection(nameof(RateLimitingSettings)).Bind(rateLimitingSettings);

@@ -6,17 +6,25 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsAspireHost>true</IsAspireHost>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1"/>
+        <PackageReference Include="Aspire.Hosting.Azure.Sql" Version="8.0.1" />
         <PackageReference Include="Aspire.Hosting.NodeJs" Version="8.0.1" />
         <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ChatBot.MigrationService\ChatBot.MigrationService.csproj" />
-      <ProjectReference Include="..\src\ChatBot\ChatBot.Api\ChatBot.Api.csproj" />
+      <ProjectReference Include="..\ChatBot\ChatBot.Api\ChatBot.Api.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

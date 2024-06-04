@@ -1,8 +1,6 @@
-using Aspire.Hosting;
-using Aspire.Hosting.ApplicationModel;
 using Microsoft.Extensions.Hosting;
 
-namespace AspireOrchestrator.AppHost;
+namespace AspireOrchestrator.AppHost.RegistrationExtension;
 
 public static class ClientRegistration
 {

@@ -1,17 +1,15 @@
-using Aspire.Hosting;
-using AspireOrchestrator.AppHost;
+using AspireOrchestrator.AppHost.RegistrationExtension;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 var db = builder
     .AddSqlServer("sql")
+    .PublishAsAzureSqlDatabase()
     .AddDatabase("avatarui");
 
- var api = builder
-     .AddProject<Projects.ChatBot_Api>("api")
-     .WithReference(db);
+var api = builder.RegisterApi(db);
 
- builder
+builder
      .AddProject<Projects.ChatBot_MigrationService>("migration")
      .WithReference(db);
 
