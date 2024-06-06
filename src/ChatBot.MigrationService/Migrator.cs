@@ -28,7 +28,7 @@ public class Migrator(
 
             await EnsureDatabaseAsync(dbContext, cancellationToken);
             await RunMigrationAsync(dbContext, cancellationToken);
-            await SeedData(dbContext, cancellationToken);
+            //await SeedData(dbContext, cancellationToken);
         }
         catch (Exception ex)
         {
