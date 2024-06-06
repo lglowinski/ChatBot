@@ -25,26 +25,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      
-      - run: dotnet restore
-
       - name: Install azd
         uses: Azure/setup-azd@v0.1.0
 
       - name: Install .NET Aspire workload
         run: dotnet workload install aspire
 
-      # - name: Log in with Azure (Federated Credentials)
-      #   if: ${{ env.AZURE_CLIENT_ID != '' }}
-      #   run: |
-      #     azd auth login `
-      #       --client-id "$Env:AZURE_CLIENT_ID" `
-      #       --federated-credential-provider "github" `
-      #       --tenant-id "$Env:AZURE_TENANT_ID"
-      #   shell: pwsh
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      - run: dotnet restore
+
+      - name: Log in with Azure (Federated Credentials)
+        if: ${{ env.AZURE_CLIENT_ID != '' }}
+        run: |
+          azd auth login `
+            --client-id "$Env:AZURE_CLIENT_ID" `
+            --federated-credential-provider "github" `
+            --tenant-id "$Env:AZURE_TENANT_ID"
+        shell: pwsh
 
       - name: Log in with Azure (Client Credentials)
         if: ${{ env.AZURE_CREDENTIALS != '' }}
