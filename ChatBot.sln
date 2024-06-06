@@ -24,6 +24,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.Infrastructure", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot.MigrationService", "src\ChatBot.MigrationService\ChatBot.MigrationService.csproj", "{5B1197F9-ED62-49D3-9143-804D1B124B2E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{A5DF0B06-0345-4103-B4D1-7B27E1223629}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		azure.yaml = azure.yaml
+		.github\workflows\azure-dev.yml = .github\workflows\azure-dev.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
