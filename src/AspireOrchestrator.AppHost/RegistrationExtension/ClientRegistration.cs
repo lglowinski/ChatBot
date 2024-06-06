@@ -1,8 +1,6 @@
-using Aspire.Hosting;
-using Aspire.Hosting.ApplicationModel;
 using Microsoft.Extensions.Hosting;
 
-namespace AspireOrchestrator.AppHost;
+namespace AspireOrchestrator.AppHost.RegistrationExtension;
 
 public static class ClientRegistration
 {
@@ -11,9 +9,9 @@ public static class ClientRegistration
         var runCommand = ResolveRunCommand(builder.Environment);
         
         
-        builder.AddNpmApp("chat-bot-frontend", "../src/Clients/chat-bot-frontend", runCommand)
+        builder.AddNpmApp("chat-bot-frontend", "../Clients/chat-bot-frontend", runCommand)
             .WithReference(apiReference)
-            .WithHttpEndpoint(env: "PORT")
+            .WithHttpEndpoint(env: "PORT", targetPort:4173)
             .WithExternalHttpEndpoints()
             .PublishAsDockerFile();
     }

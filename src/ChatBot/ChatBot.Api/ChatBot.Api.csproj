@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\..\AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj" />
       <ProjectReference Include="..\ChatBot.Infrastructure\ChatBot.Infrastructure.csproj" />
       <ProjectReference Include="..\ChatBot.OpenAiFacade\ChatBot.OpenAiFacade.csproj" />
       <ProjectReference Include="..\ChatBot.Application\ChatBot.Application.csproj" />

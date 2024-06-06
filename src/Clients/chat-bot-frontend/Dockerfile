@@ -5,22 +5,28 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml ./
 
 # pnpm must be installed as it doesn't come with the default image
-RUN npm i -g pnpm
+COPY . .
 
-COPY . ./
+RUN rm -rf node_modules
 
-RUN pnpm install
 
+# Stage for serving the application
 FROM node:20.11-bookworm-slim
 
 WORKDIR /app
-COPY --from=build /app .
-# ENV HOST is not though you can uncomment if if needed
+COPY --from=build /app ./
+
+RUN npm install -g pnpm
+RUN npm i
+RUN pnpm install
+
+# Uncomment the following line if you want to bind the container to all network interfaces (useful for local development)
 # ENV HOST=0.0.0.0
+
+# Port on which the application will be served
 EXPOSE 4173
 
-CMD ["node","build"]
+CMD ["npm", "run", "dev"]
