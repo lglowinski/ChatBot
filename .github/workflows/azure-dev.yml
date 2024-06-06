@@ -30,6 +30,12 @@ jobs:
       - name: Install .NET Aspire workload
         run: dotnet workload install aspire
 
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      - run: dotnet restore
+
       - name: Log in with Azure (Federated Credentials)
         if: ${{ env.AZURE_CLIENT_ID != '' }}
         run: |
