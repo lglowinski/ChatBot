@@ -2,19 +2,24 @@ using AspireOrchestrator.AppHost.RegistrationExtension;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var db = builder
-    .AddSqlServer("sql")
+var questionDb = builder
+    .AddSqlServer("questionsDb")
     .PublishAsAzureSqlDatabase()
     .AddDatabase("avatarui");
 
-var api = builder.RegisterApi(db);
+var usersDb = builder
+    .AddSqlServer("usersDb")
+    .PublishAsAzureSqlDatabase()
+    .AddDatabase("users");
+
+var references = builder.RegisterApi(questionDb, usersDb);
 
 builder
      .AddProject<Projects.ChatBot_MigrationService>("migration")
-     .WithReference(db);
+     .WithReference(questionDb).WithReference(usersDb);
 
-builder.RegisterChatBotFrontend(api);
+builder.RegisterChatBotFrontend(references[typeof(Projects.ChatBot_Api)], references[typeof(Projects.ChatBot_Users_Api)]);
 
-builder
+await builder
     .Build()
-    .Run();
+    .RunAsync();

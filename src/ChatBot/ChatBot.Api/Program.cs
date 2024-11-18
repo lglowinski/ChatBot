@@ -1,6 +1,6 @@
 using ChatBot.Api.Composition;
-using ChatBot.Api.Endpoints.Internal;
 using ChatBot.Infrastructure;
+using ChatBot.Common.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +17,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthorization();
 app.UseEndpoints<Program>();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseRateLimiter();
 app.AddInfrastructureMiddleware();
 
-app.Run();
+
+await app.RunAsync();
 

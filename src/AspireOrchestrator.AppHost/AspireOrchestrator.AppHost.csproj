@@ -20,6 +20,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ChatBot.MigrationService\ChatBot.MigrationService.csproj" />
       <ProjectReference Include="..\ChatBot\ChatBot.Api\ChatBot.Api.csproj" />
+      <ProjectReference Include="..\ChatBot.Users\ChatBot.Users.Api\ChatBot.Users.Api.csproj" />
     </ItemGroup>
 
     <ItemGroup>

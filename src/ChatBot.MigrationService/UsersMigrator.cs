@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using ChatBot.Infrastructure.Persistence;
+using ChatBot.Users.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -7,24 +8,22 @@ using OpenTelemetry.Trace;
 
 namespace ChatBot.MigrationService;
 
-public class Migrator(
-    ILogger<Migrator> logger,
+public class UsersMigrator(
     IServiceProvider serviceProvider,
-    IHostApplicationLifetime hostApplicationLifetime,
-    SeedDataLoader seedDataLoader)
+    IHostApplicationLifetime hostApplicationLifetime)
     : BackgroundService
 {
-    public const string ActivitySourceName = "Migrations";
+     public const string ActivitySourceName = "Migrations";
     private static readonly ActivitySource _activitySource = new(ActivitySourceName);
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        using var activity = _activitySource.StartActivity("Migrating database", ActivityKind.Client);
+        using var activity = _activitySource.StartActivity("Migrating Users database", ActivityKind.Client);
 
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<QuestionDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<UsersDbContext>();
 
             await EnsureDatabaseAsync(dbContext, cancellationToken);
             await RunMigrationAsync(dbContext, cancellationToken);
@@ -39,7 +38,7 @@ public class Migrator(
         hostApplicationLifetime.StopApplication();
     }
 
-    private static async Task EnsureDatabaseAsync(QuestionDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task EnsureDatabaseAsync(UsersDbContext dbContext, CancellationToken cancellationToken)
     {
         var dbCreator = dbContext.GetService<IRelationalDatabaseCreator>();
 
@@ -55,7 +54,7 @@ public class Migrator(
         });
     }
     
-    private static async Task RunMigrationAsync(QuestionDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task RunMigrationAsync(UsersDbContext dbContext, CancellationToken cancellationToken)
     {
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
@@ -63,19 +62,6 @@ public class Migrator(
             // Run migration in a transaction to avoid partial migration if it fails.
             await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
             await dbContext.Database.MigrateAsync(cancellationToken);
-            await transaction.CommitAsync(cancellationToken);
-        });
-    }
-    
-    private async Task SeedData(QuestionDbContext dbContext, CancellationToken cancellationToken)
-    {
-        var strategy = dbContext.Database.CreateExecutionStrategy();
-        await strategy.ExecuteAsync(async () =>
-        {
-            var questions = await seedDataLoader.GetData(cancellationToken);
-            await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-            dbContext.Questions.AddRange(questions);
-            await dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         });
     }

@@ -1,10 +1,10 @@
-using ChatBot.Api.Endpoints.Internal;
-using ChatBot.Api.Settings;
 using ChatBot.Application.Questions.Commands.AskQuestionCommand;
 using ChatBot.Application.Questions.Commands.GetQuestionQuery;
 using ChatBot.Application.Questions.Commands.HelpfulQuestionCommand;
 using ChatBot.Application.Questions.Commands.LikeQuestionCommand;
 using ChatBot.Application.Questions.Queries.ListQuestionsQuery;
+using ChatBot.Common.Endpoints;
+using ChatBot.Common.RateLimiting;
 using ChatBot.Contracts.Requests;
 using ChatBot.Contracts.Responses;
 using MediatR;
@@ -28,10 +28,11 @@ public class AskQuestionsEndpoint : IEndpoints
             .WithDescription("Answers question defined by user")
             .Produces<CreateQuestionResponse>()
             .Produces(400)
+            .Produces(401)
             .Produces(503)
             .WithTags(Tag)
             .RequireRateLimiting(rateLimitingSettings.PolicyName)
-            .AllowAnonymous();
+            .RequireAuthorization();
         
         builder.MapGet("/{id}", GetQuestionDetailsAsync)
             .WithName("GetQuestionDetails")
@@ -52,15 +53,17 @@ public class AskQuestionsEndpoint : IEndpoints
         builder.MapPut("/{id}/likes", LikeQuestionAsync)
             .WithName("LikeQuestion")
             .Accepts<LikeQuestionRequest>(ContentType)
+            .Produces(401)
             .WithDescription("Likes question")
             .WithTags(Tag)
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         builder.MapPut("/{id}/helpful", QuestionIsHelpfulAsync)
             .WithName("QuestionIsHelpful")
             .WithDescription("Marks question as helpful")
+            .Produces(401)
             .WithTags(Tag)
-            .AllowAnonymous();
+            .RequireAuthorization();
     }
     
     public static void AddService(IServiceCollection services, IConfiguration configuration)

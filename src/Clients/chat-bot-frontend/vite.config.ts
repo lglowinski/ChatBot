@@ -10,7 +10,8 @@ export default defineConfig({
 			'Content-Security-Policy-Report-Only': "default-src 'self' ; report-uri /"
 		},
 		proxy: {
-			'/api': process.env.services__api__https__0 || process.env.services__api__http__0
+			'/api': process.env.services__api__https__0 || process.env.services__api__http__0,
+			'/users-api': process.env.services__usersApi__https__0 || process.env.services__usersApi__http__0,
 		},
 	},
 	preview:{
@@ -20,7 +21,12 @@ export default defineConfig({
 			'Content-Security-Policy-Report-Only': "default-src 'self' ; report-uri /"
 		},
 		proxy: {
-			'/api': process.env.services__api__https__0 || process.env.services__api__http__0
+			'/api': process.env.services__api__https__0 || process.env.services__api__http__0,
+			'/users-api': {
+				target: process.env.services__usersApi__https__0 || process.env.services__usersApi__http__0,
+				changeOrigin: false,
+				rewrite: path => path.replace(/^\/users-api/, 'api')
+			},
 		},
 	}
 });

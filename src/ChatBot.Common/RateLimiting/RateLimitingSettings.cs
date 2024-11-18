@@ -1,6 +1,4 @@
-using System.Threading.RateLimiting;
-
-namespace ChatBot.Api.Settings;
+namespace ChatBot.Common.RateLimiting;
 
 public class RateLimitingSettings
 {

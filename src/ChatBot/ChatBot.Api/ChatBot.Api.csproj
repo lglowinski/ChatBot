@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.4.24156.9" />
@@ -16,6 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj" />
+      <ProjectReference Include="..\..\ChatBot.Common\ChatBot.Common.csproj" />
       <ProjectReference Include="..\ChatBot.Infrastructure\ChatBot.Infrastructure.csproj" />
       <ProjectReference Include="..\ChatBot.OpenAiFacade\ChatBot.OpenAiFacade.csproj" />
       <ProjectReference Include="..\ChatBot.Application\ChatBot.Application.csproj" />

@@ -1,10 +1,11 @@
 using AspireOrchestrator.ServiceDefaults;
-using ChatBot.Api.Endpoints.Internal;
 using ChatBot.Api.Settings;
 using ChatBot.Application;
+using ChatBot.Common.Auth;
+using ChatBot.Common.Endpoints;
+using ChatBot.Common.RateLimiting;
 using ChatBot.Infrastructure;
 using ChatBot.OpenAiFacade;
-using Microsoft.AspNetCore.RateLimiting;
 
 namespace ChatBot.Api.Composition;
 
@@ -13,7 +14,7 @@ public static class ServicesComposition
     public static IHostApplicationBuilder RegisterDependencies(this IHostApplicationBuilder builder)
     {
         builder.AddServiceDefaults();
-        builder.RegisterInfrastructure("avatarui");
+        builder.AddInfrastructure("avatarui");
 
         builder.Services.RegisterServices(builder.Configuration);
 
@@ -27,7 +28,7 @@ public static class ServicesComposition
         
         var rateLimitingSettings = new RateLimitingSettings();
         configuration.GetSection(nameof(RateLimitingSettings)).Bind(rateLimitingSettings);
-
+        
         serviceCollection.AddSingleton(rateLimitingSettings);
         
         serviceCollection.AddApplication();
@@ -37,23 +38,12 @@ public static class ServicesComposition
         serviceCollection.AddOpenAiClient(openAiSettings.Url, openAiSettings.ApiKey);
         serviceCollection.AddRateLimiting(rateLimitingSettings);
         serviceCollection.AddCors();
+        serviceCollection.AddAuthentication(configuration);
+        serviceCollection.AddAuthorization();
 
         return serviceCollection;
     }
     
-    public static IServiceCollection AddRateLimiting(this IServiceCollection serviceCollection,
-        RateLimitingSettings settings)
-    {
-        serviceCollection.AddRateLimiter(
-            o => o.AddFixedWindowLimiter(settings.PolicyName, options =>
-            {
-                options.PermitLimit = settings.PermitLimit;
-                options.Window = TimeSpan.FromMinutes(settings.WindowTimeInMinutes);
-            }));
-
-        return serviceCollection;
-    }
-
     public static IServiceCollection AddCors(this IServiceCollection serviceCollection)
     {
         //TODO : Obtain configuration from appsettings.json
@@ -66,4 +56,6 @@ public static class ServicesComposition
                     .AllowAnyHeader());
         });
     }
+
+
 }

@@ -11,7 +11,7 @@ namespace ChatBot.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder RegisterInfrastructure(this IHostApplicationBuilder builder, string db)
+    public static IHostApplicationBuilder AddInfrastructure(this IHostApplicationBuilder builder, string db)
     {
         return builder
             .AddDbContext(db)

@@ -31,10 +31,7 @@ interface LikeQuestionRequest{
     disliked: boolean
 }
 
-const BASE_URL = `api`
-
 export async function search(query: string): Promise<QuestionListResponse> {
-    console.log("1410");
     const response = await fetch(`/api/questions?${query}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
