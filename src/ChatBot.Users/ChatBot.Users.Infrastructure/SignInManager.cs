@@ -3,11 +3,18 @@ using ChatBot.Users.Application.Authentication;
 
 namespace ChatBot.Users.Infrastructure;
 
-public class SignInManager : ISignInManager
+public class SignInManager(IUserManager userManager) : ISignInManager
 {
-    public Task<AuthenticationResult> PasswordSignInAsync(string email, string password, bool isPersistent, bool lockoutOnFailure)
+    public async Task<AuthenticationResult> PasswordSignInAsync(string email, string password)
     {
-        throw new NotImplementedException();
+        var result = await userManager.VerifyLoginAsync(email, password);
+
+        return new AuthenticationResult
+        {
+            Succeeded = result,
+            IsLockedOut = !result,
+            RequiresTwoFactor = true
+        };
     }
 
     public Task<AuthenticationResult> TwoFactorAuthenticatorSignInAsync(string code, bool isPersistent, bool rememberClient)

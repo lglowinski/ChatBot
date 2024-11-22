@@ -1,6 +1,8 @@
 using AspireOrchestrator.ServiceDefaults;
+using ChatBot.Common.Auth;
 using ChatBot.Common.Endpoints;
 using ChatBot.Common.RateLimiting;
+using ChatBot.Common.TimeProvider;
 using ChatBot.Users.Application;
 using ChatBot.Users.Infrastructure;
 
@@ -11,7 +13,9 @@ builder.AddServiceDefaults();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDefaultTimeProvider();
 builder.Services.AddEndpoints<Program>(builder.Configuration);
+builder.Services.AddJwtSettings(builder.Configuration);
 var rateLimitingSettings = new RateLimitingSettings();
 builder.Configuration.GetSection(nameof(RateLimitingSettings)).Bind(rateLimitingSettings);
         

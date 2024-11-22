@@ -1,26 +1,70 @@
-import {writable} from "svelte/store"
-
-export interface User {
-    id: string;
-    email: string;
-}
-
+import { writable } from "svelte/store";
 
 export interface AuthState {
-    user: User | null;
+    email: string | null;
+    userId: string | null;
     token: string | null;
     isAuthenticated: boolean;
+    view: 'login' | 'register' | 'verify' | "logout";
+    qrCodeUri?: string;
+    secretKey?: string;
 }
 
+const initialState: AuthState = {
+    email: null,
+    userId: null,
+    token: null,
+    isAuthenticated: false,
+    view: 'login'
+};
+
 const createAuthStore = () => {
-    const {subscribe, set,update} = writable<AuthState>({user:null, token:null, isAuthenticated:false});
+    const { subscribe, set, update } = writable<AuthState>(initialState);
 
     return {
         subscribe,
-        login: (user : User, token: string) => update(state => ({user, token, isAuthenticated: true})),
-        logout: () => set({user:null, token: null, isAuthenticated: false}),
-        setToken: (token: string) => update(state => ({...state, token})),
-    }
-}
+
+
+        setUserData: (userId: string, email: string) =>
+            update(state => ({
+                ...state,
+                userId,
+                email
+            })),
+
+
+        setAuthenticated: (email: string, token: string) =>{
+            update(state => ({
+                ...state,
+                email,
+                token,
+                isAuthenticated: true,
+                view: 'logout',
+                qrCodeUri: undefined,
+                secretKey: undefined
+            }));
+
+            localStorage.s
+        },
+
+
+        logout: () => set(initialState),
+
+        setView: (view: AuthState['view']) =>
+            update(state => ({
+                ...state,
+                view
+            })),
+
+        setQrData: (qrCodeUri: string, secretKey: string) =>
+            update(state => ({
+                ...state,
+                qrCodeUri,
+                secretKey
+            })),
+
+        reset: () => set(initialState)
+    };
+};
 
 export const auth = createAuthStore();

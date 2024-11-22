@@ -4,6 +4,7 @@ using ChatBot.Application;
 using ChatBot.Common.Auth;
 using ChatBot.Common.Endpoints;
 using ChatBot.Common.RateLimiting;
+using ChatBot.Common.TimeProvider;
 using ChatBot.Infrastructure;
 using ChatBot.OpenAiFacade;
 
@@ -11,17 +12,17 @@ namespace ChatBot.Api.Composition;
 
 public static class ServicesComposition
 {
-    public static IHostApplicationBuilder RegisterDependencies(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder RegisterDependencies(this IHostApplicationBuilder builder, ILogger logger)
     {
         builder.AddServiceDefaults();
         builder.AddInfrastructure("avatarui");
 
-        builder.Services.RegisterServices(builder.Configuration);
+        builder.Services.RegisterServices(builder.Configuration, logger);
 
         return builder;
     }
     
-    public static IServiceCollection RegisterServices(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static IServiceCollection RegisterServices(this IServiceCollection serviceCollection, IConfiguration configuration, ILogger logger)
     {
         var openAiSettings = new OpenAiSettings();
         configuration.GetSection(nameof(OpenAiSettings)).Bind(openAiSettings);
@@ -38,8 +39,9 @@ public static class ServicesComposition
         serviceCollection.AddOpenAiClient(openAiSettings.Url, openAiSettings.ApiKey);
         serviceCollection.AddRateLimiting(rateLimitingSettings);
         serviceCollection.AddCors();
-        serviceCollection.AddAuthentication(configuration);
+        serviceCollection.AddAuthentication(configuration, logger);
         serviceCollection.AddAuthorization();
+        serviceCollection.AddDefaultTimeProvider();
 
         return serviceCollection;
     }

@@ -11,4 +11,6 @@ public interface IUserManager
     string GenerateTwoFactorQrCodeUri(string email, string secretKey);
     Task<ErrorOr<bool>> VerifyTwoFactorTokenAsync(Guid userId, string token);
     Task SetTwoFactorEnabledAsync(Guid userId, bool enabled);
+    Task<User?> GetUserByEmailAsync(string email);
+    Task<bool> VerifyLoginAsync(string email, string password);
 }

@@ -1,10 +1,16 @@
 using ChatBot.Common.Endpoints;
 using ChatBot.Common.RateLimiting;
+using ChatBot.Users.Application.Login.LoginQuery;
 using ChatBot.Users.Application.Registration.RegisterUserCommand;
+using ChatBot.Users.Application.Verification.VerifyUserQuery;
+using ChatBot.Users.Library.Login;
 using ChatBot.Users.Library.Registration;
+using ChatBot.Users.Library.Verification;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using LoginRequest = Microsoft.AspNetCore.Identity.Data.LoginRequest;
+using RegisterRequest = ChatBot.Users.Library.Registration.RegisterRequest;
 
 namespace ChatBot.Users.Endpoints;
 
@@ -31,8 +37,8 @@ public class AuthEndpoint : IEndpoints
         
         builder.MapPost("/verify", VerifyAsync)
             .WithName("Verify")
-            .Accepts<RegisterRequest>(ContentType)
-            .Produces<RegisterResponse>()
+            .Accepts<VerifyRequest>(ContentType)
+            .Produces<VerifyResponse>()
             .Produces(400)
             .Produces(503)
             .WithDescription("Verify MFA")
@@ -42,8 +48,8 @@ public class AuthEndpoint : IEndpoints
         
         builder.MapPost("/login", LoginAsync)
             .WithName("Login")
-            .Accepts<RegisterRequest>(ContentType)
-            .Produces<RegisterResponse>()
+            .Accepts<LoginRequest>(ContentType)
+            .Produces<LoginResponse>()
             .Produces(400)
             .Produces(503)
             .WithDescription("Login")
@@ -71,23 +77,38 @@ public class AuthEndpoint : IEndpoints
     }
     
     //TODO: Add verification of 2FA
-    private static async Task<IResult> VerifyAsync(RegisterRequest request,
+    private static async Task<IResult> VerifyAsync(VerifyRequest request,
         [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
     {
-        var result = await sender.Send(new RegisterUserCommand(request.Email, request.Password), cancellationToken);
+        var result = await sender.Send(new VerifyUserQuery(request.Email, request.TwoFactorCode), cancellationToken);
 
-        return Results.Ok();
+        
+        return result.Match(verified => Results.Ok(new VerifyResponse(verified.Token, verified.User.Email)), 
+            error => Results.Problem(new ProblemDetails
+        {
+            Status = int.TryParse(error.First().Code, out var code)
+                ? code
+                : 400,
+            Detail = error.First().Description
+        }));
     }
     
     //TODO: Add login
-    private static async Task<IResult> LoginAsync(RegisterRequest request,
+    private static async Task<IResult> LoginAsync(LoginRequest request,
         [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
     {
-        var result = await sender.Send(new RegisterUserCommand(request.Email, request.Password), cancellationToken);
+        var result = await sender.Send(new LoginQuery(request.Email, request.Password), cancellationToken);
 
-        return Results.Ok();
+        return result.Match(user => Results.Ok(new LoginResponse(user.Email)), 
+            error => Results.Problem(new ProblemDetails
+            {
+                Status = int.TryParse(error.First().Code, out var code)
+                    ? code
+                    : 400,
+                Detail = error.First().Description
+            }));
     }
     
     public static void AddService(IServiceCollection services, IConfiguration configuration)

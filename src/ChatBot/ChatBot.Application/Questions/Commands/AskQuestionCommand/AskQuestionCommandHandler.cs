@@ -1,3 +1,4 @@
+using ChatBot.Common.TimeProvider;
 using ChatBot.Domain;
 using ErrorOr;
 using MediatR;
@@ -13,7 +14,7 @@ public class AskQuestionCommandHandler(IReasoningService reasoningService,
         var answer = await reasoningService.AskQuestionAsync(request.Question, cancellationToken);
 
         var question = new Question(Guid.NewGuid().ToString(), request.Question, answer.Value, answer.Tags.ToList(),
-            timeProvider.UtcNow, answer.Summary);
+            timeProvider.UtcNow, answer.Summary, request.AuthorEmail);
         
         await questionsRepository.AddQuestionAsync(question, cancellationToken);
 

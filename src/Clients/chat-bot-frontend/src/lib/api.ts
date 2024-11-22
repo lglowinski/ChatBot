@@ -1,3 +1,6 @@
+import { auth } from "../store/auth.store";
+import { get } from 'svelte/store';
+
 export type QuestionListResponse = {
     questions:[
     id: string,
@@ -11,11 +14,13 @@ type QuestionDetails = {
     title: string,
     answer: string,
     upvotes: string,
-    downvotes: string
+    downvotes: string,
+    authorEmail: string
 }
 
 interface AskQuestionRequest {
-    question: string
+    question: string,
+    authorEmail: string | null
 }
 
 interface AskQuestionResponse {
@@ -23,7 +28,8 @@ interface AskQuestionResponse {
     title: string,
     answer: string,
     upvotes: number,
-    downvotes: number
+    downvotes: number,
+    authorEmail: string
 }
 
 interface LikeQuestionRequest{
@@ -54,16 +60,21 @@ export async function details(id: string, eventFetch: {
 }
 
 export async function ask(question: string): Promise<string> {
+    const authState = get(auth)
     const request: AskQuestionRequest = {
-        question: question
+        question: question,
+        authorEmail: authState.email
     };
+
+    console.log(authState.token);
 
     const res = await fetch(`/api/questions`, {
         method: 'POST',
         body: JSON.stringify(request),
         headers: {
             'Accept': 'application/json, text/plain',
-            'Content-Type': 'application/json;charset=UTF-8'
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Authorization': `Bearer ${authState.token}`
         },
     })
 
@@ -77,13 +88,15 @@ export async function like(id: string, liked: boolean, disliked:boolean) : Promi
         liked: liked,
         disliked: disliked
     };
+    const authState = get(auth);
 
     const response = await fetch(`/api/questions/${id}/likes`, {
         method: 'PUT',
         body: JSON.stringify(request),
         headers: {
             'Accept': '*/*',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authState.token}`
         },
     })
 
@@ -94,11 +107,13 @@ export async function like(id: string, liked: boolean, disliked:boolean) : Promi
 }
 
 export async function markHelpful(id: string) : Promise<void> {
+    const authState = get(auth)
     const response = await fetch(`/api/questions/${id}/helpful`, {
         method: 'PUT',
         headers: {
             'Accept': '*/*',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authState.token}`
         },
     })
 

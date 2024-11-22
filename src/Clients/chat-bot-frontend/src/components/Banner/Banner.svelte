@@ -2,15 +2,14 @@
   import { goto } from "$app/navigation";
   import { ask } from "../../lib/api";
   import { auth } from "../../store/auth.store";
-  import QrCode from "../QR/QrCode.svelte";
 
   let question = "";
   let disabled = false;
-  auth.subscribe(({ isAuthenticated }) => {
-    disabled = !isAuthenticated;
-  });
+  $: disabled = $auth.view !== 'logout';
 
   const submitQuestion = async (): Promise<void> => {
+    if ($auth.view !== 'logout') return;
+
     disabled = true;
     if (question.trim().length > 0) {
       try {
@@ -85,7 +84,5 @@
       </div>
     </div>
   </div>
-  <QrCode
-    value="otpauth://totp/avatarui:user%40example.com?secret=QEJ6QHPSGXN64GPIFFXSD5F4MOMFSYHM&issuer=avatarui&digits=6"
-  />
+
 </div>

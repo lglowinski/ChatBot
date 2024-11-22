@@ -1,7 +1,7 @@
 <script lang="ts">
     import { like, markHelpful } from "../../lib/api";
 
-    export let question: { id: string, title: string; answer:string; upvotes:number; downvotes: number };
+    export let question: { id: string, title: string; answer:string; upvotes:number; downvotes: number, authorEmail: string };
 
     let upvotes = question.upvotes;
     let downvotes = question.downvotes;
@@ -68,6 +68,9 @@
                 <path d="M18 18L12 12L18 6" stroke="#B6CCF7" stroke-width="2"/>
             </svg>
         </a>
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl italic font-bold">Author: {question.authorEmail}</h2>
+        </div>
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold">{question.title}</h2>
         </div>

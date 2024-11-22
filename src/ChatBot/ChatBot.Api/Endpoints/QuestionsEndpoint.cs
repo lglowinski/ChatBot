@@ -74,10 +74,10 @@ public class AskQuestionsEndpoint : IEndpoints
         [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
     {
-        var result = await sender.Send(new AskQuestionCommand(request.Question), cancellationToken);
+        var result = await sender.Send(new AskQuestionCommand(request.Question, request.AuthorEmail), cancellationToken);
 
         return result.Match(
-            question => Results.Created($"{BaseRoute}/{question.Id}",new CreateQuestionResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes)),
+            question => Results.Created($"{BaseRoute}/{question.Id}",new CreateQuestionResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes, question.AuthorEmail)),
             error => Results.Problem(new ProblemDetails{Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description})
         );
     }
@@ -88,7 +88,7 @@ public class AskQuestionsEndpoint : IEndpoints
         var result = await sender.Send(new GetQuestionQuery(request.Id), cancellationToken);
 
         return result.Match(
-            question => Results.Ok(new GetQuestionDetailsResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes)),
+            question => Results.Ok(new GetQuestionDetailsResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes, question.AuthorEmail)),
             error => Results.Problem(new ProblemDetails{Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description})
         );
     }

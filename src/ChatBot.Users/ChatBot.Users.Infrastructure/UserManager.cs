@@ -1,3 +1,4 @@
+using ChatBot.Common.TimeProvider;
 using ChatBot.Users.Application;
 using ChatBot.Users.Domain.Entities;
 using ChatBot.Users.Infrastructure.Mappings;
@@ -6,12 +7,12 @@ using ErrorOr;
 
 namespace ChatBot.Users.Infrastructure;
 
-public class UserManager(UserManager<IdentityUser> userManager) : IUserManager
+public class UserManager(UserManager<IdentityUser> userManager, ITimeProvider timeProvider) : IUserManager
 {
     
 public async Task<ErrorOr<User>> CreateAsync(string email, string password)
     {
-        var identityUser = new IdentityUser { UserName = email, Email = email };
+        var identityUser = new IdentityUser { UserName = email, Email = email, TwoFactorEnabled = true};
         var result = await userManager.CreateAsync(identityUser, password);
 
         if (result.Succeeded)
@@ -66,5 +67,26 @@ public async Task<ErrorOr<User>> CreateAsync(string email, string password)
         {
             await userManager.SetTwoFactorEnabledAsync(identityUser, enabled);
         }
+    }
+
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        return user?.ToDomain();
+    }
+
+    public async Task<bool> VerifyLoginAsync(string email, string password)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        
+        if (user is null || user.LockoutEnd is not null || user.LockoutEnd > DateTimeOffset.Now)
+            return false;
+        
+        var result = await userManager.CheckPasswordAsync(user, password);
+        
+        if(!result)
+            await userManager.SetLockoutEndDateAsync(user, timeProvider.UtcNow.AddMinutes(5));
+
+        return result;
     }
 }

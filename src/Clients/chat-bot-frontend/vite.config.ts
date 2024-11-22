@@ -11,7 +11,11 @@ export default defineConfig({
 		},
 		proxy: {
 			'/api': process.env.services__api__https__0 || process.env.services__api__http__0,
-			'/users-api': process.env.services__usersApi__https__0 || process.env.services__usersApi__http__0,
+			'/users-api': {
+				target: process.env.services__usersApi__https__0 || process.env.services__usersApi__http__0,
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/users-api/, 'api')
+			}
 		},
 	},
 	preview:{

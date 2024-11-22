@@ -1,4 +1,3 @@
-using ChatBot.Users.Application.Authentication;
 using MediatR;
 using ErrorOr;
 

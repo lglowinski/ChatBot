@@ -4,18 +4,23 @@ public static class ApiRegistration
 {
     public static Dictionary<Type, IResourceBuilder<ProjectResource>> RegisterApi(
         this IDistributedApplicationBuilder builder,
-        IResourceBuilder<SqlServerDatabaseResource> questionsDb, IResourceBuilder<SqlServerDatabaseResource> usersDb)
+        IResourceBuilder<SqlServerDatabaseResource> questionsDb, IResourceBuilder<SqlServerDatabaseResource> usersDb,
+        IResourceBuilder<KafkaServerResource> kafka)
     {
         var envVariables = RegisterEnvVariables(builder);
         var authVariables = RegisterAuthVariables(builder);
         
         var api = builder
             .AddProject<Projects.ChatBot_Api>("api")
-            .WithReference(questionsDb);
+            .WithReference(questionsDb)
+            .WithReference(kafka)
+            .WaitFor(questionsDb);
 
         var usersApi = builder
             .AddProject<Projects.ChatBot_Users_Api>("usersApi")
-            .WithReference(usersDb);
+            .WithReference(usersDb)
+            .WithReference(kafka)
+            .WaitFor(usersDb);
 
         foreach (var variable in envVariables)
         {

@@ -4,4 +4,4 @@ using MediatR;
 
 namespace ChatBot.Application.Questions.Commands.AskQuestionCommand;
 
-public record AskQuestionCommand(string Question) : IRequest<ErrorOr<Question>>;
+public record AskQuestionCommand(string Question, string AuthorEmail) : IRequest<ErrorOr<Question>>;

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk;Aspire.AppHost.Sdk/9.0.0">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -11,10 +11,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.1"/>
-        <PackageReference Include="Aspire.Hosting.Azure.Sql" Version="8.0.1" />
-        <PackageReference Include="Aspire.Hosting.NodeJs" Version="8.0.1" />
-        <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.0.1" />
+        <PackageReference Include="Aspire.Hosting" Version="9.0.0" />
+        <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+        <PackageReference Include="Aspire.Hosting.Azure.Sql" Version="9.0.0" />
+        <PackageReference Include="Aspire.Hosting.Kafka" Version="9.0.0" />
+        <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.0.0" />
+        <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.0.0" />
+        <PackageReference Include="System.Runtime" Version="4.3.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,5 +31,4 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
-
 </Project>
