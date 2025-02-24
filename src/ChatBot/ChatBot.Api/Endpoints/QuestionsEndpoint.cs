@@ -1,4 +1,5 @@
 using ChatBot.Application.Questions.Commands.AskQuestionCommand;
+using ChatBot.Application.Questions.Commands.DeleteUserQuestionsCommand;
 using ChatBot.Application.Questions.Commands.GetQuestionQuery;
 using ChatBot.Application.Questions.Commands.HelpfulQuestionCommand;
 using ChatBot.Application.Questions.Commands.LikeQuestionCommand;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatBot.Api.Endpoints;
 
-public class AskQuestionsEndpoint : IEndpoints
+public class QuestionsEndpoints : IEndpoints
 {
     private const string ContentType = "application/json";
     private const string Tag = "Questions";
@@ -64,6 +65,12 @@ public class AskQuestionsEndpoint : IEndpoints
             .Produces(401)
             .WithTags(Tag)
             .RequireAuthorization();
+
+        builder.MapDelete("/{authorEmail}", DeleteQuestionAsync)
+            .WithName("DeleteQuestion")
+            .WithDescription("Marks question as helpful")
+            .Produces(401)
+            .WithTags(Tag);
     }
     
     public static void AddService(IServiceCollection services, IConfiguration configuration)
@@ -118,7 +125,7 @@ public class AskQuestionsEndpoint : IEndpoints
             _ => Results.Ok(),            
             error => Results.Problem(new ProblemDetails
             {
-                Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description
+                Status = int.TryParse(error[0].Code, out var code) ? code : 400, Detail = error[0].Description
             }));
     }
 
@@ -130,7 +137,19 @@ public class AskQuestionsEndpoint : IEndpoints
             _ => Results.Ok(),
             error => Results.Problem(new ProblemDetails
             {
-                Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description
+                Status = int.TryParse(error[0].Code, out var code) ? code : 400, Detail = error[0].Description
+            }));
+    }
+    
+    private static async Task<IResult> DeleteQuestionAsync([FromRoute] string authorEmail, [FromServices] ISender sender, CancellationToken cancellationToken = default)
+    {
+        var result = await sender.Send(new DeleteUserQuestionCommand(authorEmail), cancellationToken);
+
+        return result.Match(
+            _ => Results.Ok(),
+            error => Results.Problem(new ProblemDetails
+            {
+                Status = int.TryParse(error[0].Code, out var code) ? code : 400, Detail = error[0].Description
             }));
     }
 }

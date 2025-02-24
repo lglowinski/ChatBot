@@ -10,7 +10,7 @@
 
     async function handleSubmit() {
         if (password !== confirmPassword) {
-            errorMessage = 'Hasła nie są identyczne';
+            errorMessage = 'Passwords do not match';
             return;
         }
 

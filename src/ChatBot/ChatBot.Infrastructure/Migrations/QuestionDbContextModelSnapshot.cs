@@ -33,9 +33,12 @@ namespace ChatBot.Infrastructure.Migrations
 
                     b.Property<string>("AuthorEmail")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Downvotes")
@@ -43,6 +46,9 @@ namespace ChatBot.Infrastructure.Migrations
 
                     b.Property<int>("HelpfulCount")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Summary")
                         .IsRequired()
@@ -60,6 +66,8 @@ namespace ChatBot.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorEmail");
 
                     b.HasIndex("CreatedAt");
 

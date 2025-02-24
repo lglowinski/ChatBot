@@ -17,7 +17,7 @@
 
             errorMessage = '';
         } catch (error) {
-            errorMessage = error instanceof Error ? error.message : 'Nieoczekiwany błąd';
+            errorMessage = error instanceof Error ? JSON.parse(error.message).detail : 'Unexpected error';
         }
     }
 </script>

@@ -1,7 +1,11 @@
+using System.Text.Json;
 using AspireOrchestrator.ServiceDefaults;
 using ChatBot.Api.Settings;
 using ChatBot.Application;
 using ChatBot.Common.Auth;
+using ChatBot.Common.Communication;
+using ChatBot.Common.Communication.Configuration;
+using ChatBot.Common.Communication.Requests;
 using ChatBot.Common.Endpoints;
 using ChatBot.Common.RateLimiting;
 using ChatBot.Common.TimeProvider;
@@ -17,6 +21,7 @@ public static class ServicesComposition
         builder.AddServiceDefaults();
         builder.AddInfrastructure("avatarui");
 
+        builder.AddKafkaProducer<string, QuestionDeleted>("messaging");
         builder.Services.RegisterServices(builder.Configuration, logger);
 
         return builder;
@@ -30,6 +35,7 @@ public static class ServicesComposition
         var rateLimitingSettings = new RateLimitingSettings();
         configuration.GetSection(nameof(RateLimitingSettings)).Bind(rateLimitingSettings);
         
+        
         serviceCollection.AddSingleton(rateLimitingSettings);
         
         serviceCollection.AddApplication();
@@ -42,6 +48,7 @@ public static class ServicesComposition
         serviceCollection.AddAuthentication(configuration, logger);
         serviceCollection.AddAuthorization();
         serviceCollection.AddDefaultTimeProvider();
+        serviceCollection.AddCommunication(configuration, logger);
 
         return serviceCollection;
     }
@@ -59,5 +66,23 @@ public static class ServicesComposition
         });
     }
 
+    private static IServiceCollection AddCommunication(this IServiceCollection serviceCollection, IConfiguration configuration, ILogger logger)
+    {
+        var useKafka = configuration.GetValue<bool>("UseKafka");
+        CommunicationConfiguration communicationSettings;
+        
+        if (useKafka)
+        {
+            communicationSettings = ApiCommunicationConfiguration.Kafka("userDeleted");
+        }
+        else
+        {
+            communicationSettings = ApiCommunicationConfiguration.Http;
+        }
 
+        serviceCollection.AddSingleton(communicationSettings);
+        serviceCollection.AddCommunication(communicationSettings);
+
+        return serviceCollection;
+    }
 }

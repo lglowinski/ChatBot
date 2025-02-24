@@ -21,6 +21,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ChatBot.Categories\ChatBot.Categories.Api\ChatBot.Categories.Api.csproj" />
+      <ProjectReference Include="..\ChatBot.Common\ChatBot.Common.csproj" />
       <ProjectReference Include="..\ChatBot.MigrationService\ChatBot.MigrationService.csproj" />
       <ProjectReference Include="..\ChatBot\ChatBot.Api\ChatBot.Api.csproj" />
       <ProjectReference Include="..\ChatBot.Users\ChatBot.Users.Api\ChatBot.Users.Api.csproj" />
@@ -30,5 +32,10 @@
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Configuration\Http\" />
+      <Folder Include="Configuration\Kafka\" />
     </ItemGroup>
 </Project>

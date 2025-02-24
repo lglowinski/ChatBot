@@ -20,7 +20,7 @@ public class AuthEndpoint : IEndpoints
     private const string Tag = "Users";
     private const string BaseRoute = "/api/users";
     
-    public static void DefineEndpoints(IEndpointRouteBuilder app, RateLimitingSettings rateLimitingSettings)
+    public static void DefineEndpoints(IEndpointRouteBuilder app, RateLimitingSettings rateLimitingSettings = null)
     {
         var builder = app.MapGroup(BaseRoute);
         

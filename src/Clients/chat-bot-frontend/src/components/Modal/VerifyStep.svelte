@@ -15,13 +15,12 @@
             const response = await verify($auth.email, verificationCode);
 
             if (response.token && response.userEmail) {
-                console.log("user authenticated")
                 auth.setAuthenticated(response.userEmail, response.token);
             }
 
             errorMessage = '';
         } catch (error) {
-            errorMessage = error instanceof Error ? error.message : 'Unexpected error';
+            errorMessage = error instanceof Error ? JSON.parse(error.message).detail : 'Unexpected error';
         }
     }
 </script>

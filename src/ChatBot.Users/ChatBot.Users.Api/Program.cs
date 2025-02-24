@@ -1,30 +1,11 @@
-using AspireOrchestrator.ServiceDefaults;
-using ChatBot.Common.Auth;
 using ChatBot.Common.Endpoints;
-using ChatBot.Common.RateLimiting;
-using ChatBot.Common.TimeProvider;
-using ChatBot.Users.Application;
-using ChatBot.Users.Infrastructure;
+using ChatBot.Users.Composition;
 
 var builder = WebApplication.CreateBuilder(args);
+using var loggerFactory =
+    LoggerFactory.Create(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Information).AddConsole());
 
-builder.AddServiceDefaults();
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDefaultTimeProvider();
-builder.Services.AddEndpoints<Program>(builder.Configuration);
-builder.Services.AddJwtSettings(builder.Configuration);
-var rateLimitingSettings = new RateLimitingSettings();
-builder.Configuration.GetSection(nameof(RateLimitingSettings)).Bind(rateLimitingSettings);
-        
-builder.Services.AddSingleton(rateLimitingSettings);
-
-builder.Services.AddRateLimiting(rateLimitingSettings);
-
-builder.Services.AddApplication();
-builder.AddInfrastructure("users");
+builder.RegisterDependencies(loggerFactory.CreateLogger("Dependencies"));
 
 var app = builder.Build();
 

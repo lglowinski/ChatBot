@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>ChatBot.Users</RootNamespace>
+        <UserSecretsId>33f0d8c6-3e6c-4a72-ad9c-93cc1e73f897</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,10 +27,6 @@
       <ProjectReference Include="..\..\AspireOrchestrator.ServiceDefaults\AspireOrchestrator.ServiceDefaults.csproj" />
       <ProjectReference Include="..\..\ChatBot.Common\ChatBot.Common.csproj" />
       <ProjectReference Include="..\ChatBot.Users.Library\ChatBot.Users.Library.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Settings\" />
     </ItemGroup>
 
 </Project>

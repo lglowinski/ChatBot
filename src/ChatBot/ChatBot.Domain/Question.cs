@@ -14,6 +14,8 @@ public class Question
     public string Summary { get; init; }
     public int HelpfulCount { get; set; }
     public string AuthorEmail { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
     
     public Question(
         string id,
@@ -22,7 +24,9 @@ public class Question
         List<string> tags,
         DateTimeOffset createdAt,
         string summary,
-        string authorEmail)
+        string authorEmail,
+        bool isDeleted = false,
+        DateTimeOffset? deletedAt = null)
     {
         Id = id;
         Title = title;
@@ -34,6 +38,8 @@ public class Question
         Upvotes = 0;
         HelpfulCount = 0;
         AuthorEmail = authorEmail;
+        IsDeleted = isDeleted;
+        DeletedAt = deletedAt;
     }
 
     [JsonConstructor]

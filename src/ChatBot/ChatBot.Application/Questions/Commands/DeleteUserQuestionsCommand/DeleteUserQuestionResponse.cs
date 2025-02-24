@@ -1,0 +1,3 @@
+namespace ChatBot.Application.Questions.Commands.DeleteUserQuestionsCommand;
+
+public record DeleteUserQuestionResponse(IEnumerable<string> DeletedQuestionIds);

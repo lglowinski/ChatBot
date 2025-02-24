@@ -1,26 +1,42 @@
+using Microsoft.Extensions.Configuration;
+
 namespace AspireOrchestrator.AppHost.RegistrationExtension;
 
 public static class ApiRegistration
 {
     public static Dictionary<Type, IResourceBuilder<ProjectResource>> RegisterApi(
         this IDistributedApplicationBuilder builder,
-        IResourceBuilder<SqlServerDatabaseResource> questionsDb, IResourceBuilder<SqlServerDatabaseResource> usersDb,
-        IResourceBuilder<KafkaServerResource> kafka)
+        IResourceBuilder<SqlServerDatabaseResource> questionsDb,
+        IResourceBuilder<SqlServerDatabaseResource> usersDb,
+        IResourceBuilder<SqlServerDatabaseResource> categoriesDb,
+        IResourceBuilder<KafkaServerResource> kafka,
+        ConfigurationManager builderConfiguration, IResourceBuilder<ProjectResource> migrator)
     {
         var envVariables = RegisterEnvVariables(builder);
         var authVariables = RegisterAuthVariables(builder);
+
+        var useKafka = builder.AddParameter("useKafka");
         
         var api = builder
             .AddProject<Projects.ChatBot_Api>("api")
             .WithReference(questionsDb)
             .WithReference(kafka)
-            .WaitFor(questionsDb);
+            .WaitFor(questionsDb)
+            .WaitFor(migrator)
+            .WithEnvironment("UseKafka", useKafka);
 
         var usersApi = builder
             .AddProject<Projects.ChatBot_Users_Api>("usersApi")
             .WithReference(usersDb)
             .WithReference(kafka)
-            .WaitFor(usersDb);
+            .WaitFor(usersDb)
+            .WaitFor(migrator)
+            .WithEnvironment("UseKafka", useKafka);
+
+        var categoriesApi = builder
+            .AddProject<Projects.ChatBot_Categories_Api>("categoriesApi")
+            .WithReference(categoriesDb)
+            .WithReference(kafka).WaitFor(migrator).WaitFor(categoriesDb);
 
         foreach (var variable in envVariables)
         {
@@ -36,11 +52,13 @@ public static class ApiRegistration
         return new Dictionary<Type, IResourceBuilder<ProjectResource>>
         {
             { typeof(Projects.ChatBot_Api), api },
-            { typeof(Projects.ChatBot_Users_Api), usersApi }
+            { typeof(Projects.ChatBot_Users_Api), usersApi },
+            { typeof(Projects.ChatBot_Categories_Api), categoriesApi }
         };
     }
 
-    private static IEnumerable<(string Key, IResourceBuilder<ParameterResource> Value)> RegisterEnvVariables(IDistributedApplicationBuilder builder)
+    private static IEnumerable<(string Key, IResourceBuilder<ParameterResource> Value)> RegisterEnvVariables(
+        IDistributedApplicationBuilder builder)
     {
         var url = builder.AddParameter("apiUrl", secret: true);
         var key = builder.AddParameter("key", secret: true);
@@ -48,8 +66,9 @@ public static class ApiRegistration
         yield return new ValueTuple<string, IResourceBuilder<ParameterResource>>("OpenAiSettings__Url", url);
         yield return new ValueTuple<string, IResourceBuilder<ParameterResource>>("OpenAiSettings__ApiKey", key);
     }
-    
-    private static IEnumerable<(string Key, IResourceBuilder<ParameterResource> Value)> RegisterAuthVariables(IDistributedApplicationBuilder builder)
+
+    private static IEnumerable<(string Key, IResourceBuilder<ParameterResource> Value)> RegisterAuthVariables(
+        IDistributedApplicationBuilder builder)
     {
         var issuer = builder.AddParameter("issuer", secret: true);
         var audience = builder.AddParameter("audience", secret: true);

@@ -7,6 +7,6 @@ namespace ChatBot.Common.Endpoints;
 
 public interface IEndpoints
 {
-    public static abstract void DefineEndpoints(IEndpointRouteBuilder app, RateLimitingSettings rateLimitingSettings);
+    public static abstract void DefineEndpoints(IEndpointRouteBuilder app, RateLimitingSettings rateLimitingSettings = null);
     public static abstract void AddService(IServiceCollection services, IConfiguration configuration);
 }
