@@ -9,8 +9,7 @@ public static class ApiRegistration
         IResourceBuilder<SqlServerDatabaseResource> questionsDb,
         IResourceBuilder<SqlServerDatabaseResource> usersDb,
         IResourceBuilder<SqlServerDatabaseResource> categoriesDb,
-        IResourceBuilder<KafkaServerResource> kafka,
-        ConfigurationManager builderConfiguration, IResourceBuilder<ProjectResource> migrator)
+        IResourceBuilder<KafkaServerResource> kafka, IResourceBuilder<ProjectResource> migrator)
     {
         var envVariables = RegisterEnvVariables(builder);
         var authVariables = RegisterAuthVariables(builder);
@@ -22,7 +21,7 @@ public static class ApiRegistration
             .WithReference(questionsDb)
             .WithReference(kafka)
             .WaitFor(questionsDb)
-            .WaitFor(migrator)
+            .WaitForCompletion(migrator)
             .WithEnvironment("UseKafka", useKafka);
 
         var usersApi = builder
@@ -30,13 +29,13 @@ public static class ApiRegistration
             .WithReference(usersDb)
             .WithReference(kafka)
             .WaitFor(usersDb)
-            .WaitFor(migrator)
+            .WaitForCompletion(migrator)
             .WithEnvironment("UseKafka", useKafka);
 
         var categoriesApi = builder
             .AddProject<Projects.ChatBot_Categories_Api>("categoriesApi")
             .WithReference(categoriesDb)
-            .WithReference(kafka).WaitFor(migrator).WaitFor(categoriesDb);
+            .WithReference(kafka).WaitForCompletion(migrator).WaitFor(categoriesDb);
 
         foreach (var variable in envVariables)
         {

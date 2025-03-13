@@ -16,7 +16,8 @@ public static class ApiCommunicationConfiguration
                 ClientName = "QuestionsClient",
                 Method = HttpMethod.Delete
             }
-        }
+        },
+        CommunicationType = CommunicationType.Http
     };
     
     public static CommunicationConfiguration Kafka(string topic) => new CommunicationConfiguration
@@ -27,6 +28,7 @@ public static class ApiCommunicationConfiguration
             {
                 Topic = topic
             }
-        }
+        },
+        CommunicationType = CommunicationType.Kafka
     };
 }

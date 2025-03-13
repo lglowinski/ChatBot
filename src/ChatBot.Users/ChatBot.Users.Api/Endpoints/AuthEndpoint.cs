@@ -1,5 +1,6 @@
 using ChatBot.Common.Endpoints;
 using ChatBot.Common.RateLimiting;
+using ChatBot.Users.Application.DeleteUser;
 using ChatBot.Users.Application.Login.LoginQuery;
 using ChatBot.Users.Application.Registration.RegisterUserCommand;
 using ChatBot.Users.Application.Verification.VerifyUserQuery;
@@ -56,6 +57,15 @@ public class AuthEndpoint : IEndpoints
             .WithTags(Tag)
             .RequireRateLimiting(rateLimitingSettings.PolicyName)
             .AllowAnonymous();
+        
+        builder.MapDelete("/delete/{email}", DeleteAsync)
+            .WithName("Delete")
+            .Produces(404)
+            .Produces(503)
+            .WithDescription("Delete by email")
+            .WithTags(Tag)
+            .RequireRateLimiting(rateLimitingSettings.PolicyName)
+            .AllowAnonymous();
     }
 
     private static async Task<IResult> RegisterAsync(RegisterRequest request,
@@ -94,7 +104,6 @@ public class AuthEndpoint : IEndpoints
         }));
     }
     
-    //TODO: Add login
     private static async Task<IResult> LoginAsync(LoginRequest request,
         [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
@@ -109,6 +118,14 @@ public class AuthEndpoint : IEndpoints
                     : 400,
                 Detail = error.First().Description
             }));
+    }
+    
+    private static async Task<IResult> DeleteAsync([FromRoute] string email,
+        [FromServices] ISender sender,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await sender.Send(new DeleteUserCommand(email), cancellationToken);
+        return !result ? Results.NotFound() : Results.Ok();
     }
     
     public static void AddService(IServiceCollection services, IConfiguration configuration)

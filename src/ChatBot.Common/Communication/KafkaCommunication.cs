@@ -11,18 +11,17 @@ public class KafkaCommunication(
     CommunicationConfiguration configuration,
     ITimeProvider timeProvider) : ICommunication
 {
-    public async Task SendAsync<T>(T request, CancellationToken cancellationToken = default) where T : IKafkaMessage, IHttpMessage
+    public async Task SendAsync<T>(T request, CancellationToken cancellationToken = default) where T : IHttpMessage, IKafkaMessage
     {
         await SendAsyncInternal(request, cancellationToken);
     }
 
-    public void Send<T>(T request) where T : IKafkaMessage, IHttpMessage
+    public void Send<T>(T request) where T : IHttpMessage, IKafkaMessage<T>
     {
         SendInternal(request);
     }
 
-    private async Task SendAsyncInternal<T>(T request, CancellationToken cancellationToken = default)
-        where T : IKafkaMessage
+    private async Task SendAsyncInternal<T>(T request, CancellationToken cancellationToken = default) where T : IKafkaMessage
     {
         var kafkaConfiguration = GetKafkaConfiguration<T>();
 
@@ -33,8 +32,7 @@ public class KafkaCommunication(
         }, cancellationToken);
     }
 
-    private void SendInternal<T>(T request)
-        where T : IKafkaMessage
+    private void SendInternal<T>(T request) where T : IKafkaMessage
     {
         var kafkaConfiguration = GetKafkaConfiguration<T>();
 
@@ -45,8 +43,7 @@ public class KafkaCommunication(
         });
     }
     
-    private KafkaConfiguration GetKafkaConfiguration<T>()
-        where T : IKafkaMessage
+    private KafkaConfiguration GetKafkaConfiguration<T>() where T : IKafkaMessage
     {
         return configuration.AsKafkaConfiguration(typeof(T));
     }

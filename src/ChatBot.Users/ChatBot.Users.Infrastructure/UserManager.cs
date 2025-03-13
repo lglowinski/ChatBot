@@ -89,4 +89,18 @@ public async Task<ErrorOr<User>> CreateAsync(string email, string password)
 
         return result;
     }
+
+    public async Task<bool> DeleteAsync(string email)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        
+        if (user is null)
+            return false;
+
+        user.LockoutEnd = timeProvider.UtcNow.AddMonths(24);
+        user.LockoutEnabled = true;
+        await userManager.UpdateAsync(user);
+
+        return true;
+    }
 }

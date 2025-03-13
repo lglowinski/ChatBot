@@ -1,35 +1,40 @@
 using ChatBot.Common.Communication.Configuration;
 using ChatBot.Common.Communication.Http.Strategies;
+using ChatBot.Common.Communication.Kafka;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace ChatBot.Common.Communication;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddCommunication(this IServiceCollection services, CommunicationConfiguration configuration)
+    public static IHostApplicationBuilder AddCommunication(this IHostApplicationBuilder applicationBuilder, CommunicationConfiguration configuration)
     {
         if (configuration.CommunicationType is CommunicationType.Http)
-            services.RegisterHttpCommunication();
+            applicationBuilder.RegisterHttpCommunication(configuration);
         else
-            services.RegisterKafkaCommunication();
+            applicationBuilder.RegisterKafkaCommunication(configuration);
         
-        return services;
+        return applicationBuilder;
         
     }
-    
-    public static IServiceCollection RegisterHttpCommunication(this IServiceCollection services)
+
+    public static IHostApplicationBuilder RegisterHttpCommunication(this IHostApplicationBuilder applicationBuilder,
+        CommunicationConfiguration configuration)
     {
-        services.AddHttpClient();
-        services.AddSingleton<HttpStrategyFactory>();
-        services.AddSingleton<IHttpSendStrategy, HttpDeleteStrategy>();
-        services.AddSingleton<IHttpSendStrategy, HttpPostStrategy>();
-        services.AddTransient<ICommunication, HttpCommunication>();
-        return services;
+        applicationBuilder.Services.AddHttpClient();
+        applicationBuilder.Services.AddSingleton<HttpStrategyFactory>();
+        applicationBuilder.Services.AddSingleton<IHttpSendStrategy, HttpDeleteStrategy>();
+        applicationBuilder.Services.AddSingleton<IHttpSendStrategy, HttpPostStrategy>();
+        applicationBuilder.Services.AddTransient<ICommunication, HttpCommunication>();
+        return applicationBuilder;
     }
     
-    public static IServiceCollection RegisterKafkaCommunication(this IServiceCollection services)
+    public static IHostApplicationBuilder RegisterKafkaCommunication(this IHostApplicationBuilder applicationBuilder,
+        CommunicationConfiguration configuration)
     {
-        services.AddSingleton<ICommunication, KafkaCommunication>();
-        return services;
+        applicationBuilder.Services.AddSingleton<ICommunication, KafkaCommunication>();
+        
+        return applicationBuilder;
     }
 }

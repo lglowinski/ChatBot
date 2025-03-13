@@ -1,11 +1,13 @@
-using System.Text.Json;
 using AspireOrchestrator.ServiceDefaults;
 using ChatBot.Api.Settings;
+using ChatBot.Api.Workers;
 using ChatBot.Application;
 using ChatBot.Common.Auth;
 using ChatBot.Common.Communication;
 using ChatBot.Common.Communication.Configuration;
+using ChatBot.Common.Communication.Kafka;
 using ChatBot.Common.Communication.Requests;
+using ChatBot.Common.Communication.Serialization;
 using ChatBot.Common.Endpoints;
 using ChatBot.Common.RateLimiting;
 using ChatBot.Common.TimeProvider;
@@ -21,7 +23,23 @@ public static class ServicesComposition
         builder.AddServiceDefaults();
         builder.AddInfrastructure("avatarui");
 
-        builder.AddKafkaProducer<string, QuestionDeleted>("messaging");
+        builder.AddKafkaProducer<string, IKafkaMessage>("messaging", static settings => settings.DisableHealthChecks = true,
+            static provider =>
+            {
+                var serializer = new CustomSerializer<IKafkaMessage>();
+                provider.SetValueSerializer(serializer);
+            });
+        builder.AddKafkaConsumer<string, UserDeleted>("messaging", settings =>
+        {
+            settings.Config.GroupId = "userDeleted";
+            settings.Config.AllowAutoCreateTopics = true;
+        }, static builder =>
+        {
+            var deserializer = new CustomSerializer<UserDeleted>();
+            builder.SetValueDeserializer(deserializer);
+        });
+        builder.AddCommunication(builder.Configuration, logger);
+        builder.Services.AddHostedService<KafkaWorker<UserDeleted>>();
         builder.Services.RegisterServices(builder.Configuration, logger);
 
         return builder;
@@ -48,7 +66,6 @@ public static class ServicesComposition
         serviceCollection.AddAuthentication(configuration, logger);
         serviceCollection.AddAuthorization();
         serviceCollection.AddDefaultTimeProvider();
-        serviceCollection.AddCommunication(configuration, logger);
 
         return serviceCollection;
     }
@@ -66,23 +83,23 @@ public static class ServicesComposition
         });
     }
 
-    private static IServiceCollection AddCommunication(this IServiceCollection serviceCollection, IConfiguration configuration, ILogger logger)
+    private static IHostApplicationBuilder AddCommunication(this IHostApplicationBuilder applicationBuilder, IConfiguration configuration, ILogger logger)
     {
         var useKafka = configuration.GetValue<bool>("UseKafka");
         CommunicationConfiguration communicationSettings;
         
         if (useKafka)
         {
-            communicationSettings = ApiCommunicationConfiguration.Kafka("userDeleted");
+            communicationSettings = ApiCommunicationConfiguration.Kafka("questionDeleted");
         }
         else
         {
             communicationSettings = ApiCommunicationConfiguration.Http;
         }
 
-        serviceCollection.AddSingleton(communicationSettings);
-        serviceCollection.AddCommunication(communicationSettings);
+        applicationBuilder.Services.AddSingleton(communicationSettings);
+        applicationBuilder.AddCommunication(communicationSettings);
 
-        return serviceCollection;
+        return applicationBuilder;
     }
 }

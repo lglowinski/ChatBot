@@ -13,4 +13,5 @@ public interface IUserManager
     Task SetTwoFactorEnabledAsync(Guid userId, bool enabled);
     Task<User?> GetUserByEmailAsync(string email);
     Task<bool> VerifyLoginAsync(string email, string password);
+    Task<bool> DeleteAsync(string email);
 }

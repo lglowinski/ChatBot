@@ -27,7 +27,7 @@ public class CategoriesEndpoints : IEndpoints
             .AllowAnonymous();
         
         builder.MapGet("/{id}", GetCategoryAsync)
-            .WithName("Register")
+            .WithName("Get category")
             .Accepts<string>(ContentType)
             .Produces<string>()
             .Produces(400)
@@ -38,7 +38,7 @@ public class CategoriesEndpoints : IEndpoints
             .AllowAnonymous();
         
         builder.MapDelete("/{id}", DeleteCategoryAsync)
-            .WithName("Register")
+            .WithName("Delete")
             .Accepts<string>(ContentType)
             .Produces<string>()
             .Produces(400)

@@ -23,7 +23,7 @@ public class HttpCommunication(IHttpClientFactory clientFactory, CommunicationCo
         await strategy.SendAsync();
     }
 
-    public void Send<T>(T request) where T : IHttpMessage, IKafkaMessage
+    public void Send<T>(T request) where T : IHttpMessage, IKafkaMessage<T>
     {
         throw new NotImplementedException();
     }

@@ -4,6 +4,12 @@ using ChatBot.Common.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseDefaultServiceProvider((context, options) =>
+{
+    options.ValidateScopes = true;
+    options.ValidateOnBuild = true;
+});
+
 using var loggerFactory =
     LoggerFactory.Create(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Information).AddConsole());
 
@@ -25,7 +31,6 @@ app.UseHttpsRedirection();
 app.UseCors();
 app.UseRateLimiter();
 app.AddInfrastructureMiddleware();
-
 
 await app.RunAsync();
 
