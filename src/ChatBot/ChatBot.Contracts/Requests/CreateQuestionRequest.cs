@@ -10,4 +10,8 @@ public class CreateQuestionRequest
     [MaxLength(256)]
     [Required]
     public required string Question { get; set; } 
+    [DataMember(Name = "authorEmail")]
+    [EmailAddress]
+    [Required]
+    public required string AuthorEmail { get; set; }
 }

@@ -9,4 +9,6 @@ public record CreateQuestionResponse([property: DataMember(Name = "id")] string 
     [property: DataMember(Name = "upvotes")]
     int Upvotes,
     [property: DataMember(Name = "downvotes")]
-    int Downvotes);
+    int Downvotes,
+    [property:DataMember(Name="authorEmail")]
+    string AuthorEmail);

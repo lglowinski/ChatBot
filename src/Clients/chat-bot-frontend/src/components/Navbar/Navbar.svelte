@@ -1,5 +1,10 @@
 <script lang="ts">
 	import SearchBar from "./SearchBar.svelte";
+	import {auth} from "../../store/auth.store";
+	import LoginButton from "./LoginButton.svelte";
+    import ProfileNav from "./ProfileNav.svelte"
+	const isLogged = $auth.isAuthenticated;
+
 </script>
 
 <nav class="bg-white border-gray-900 dark:bg-[#121C24] dark:border-[#E5E8EB] dark:border-b-2 stroke-1 sticky top-0" style="z-index: 9999">
@@ -12,6 +17,11 @@
 		</div>
 		<div class="flex md:order-2 min-w-96">
 			<SearchBar/>
+			{#if isLogged}
+				<ProfileNav/>
+			{:else}
+				<LoginButton/>
+			{/if}
 		</div>
 	</div>
 </nav>

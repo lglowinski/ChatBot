@@ -1,10 +1,11 @@
-using ChatBot.Api.Endpoints.Internal;
-using ChatBot.Api.Settings;
 using ChatBot.Application.Questions.Commands.AskQuestionCommand;
+using ChatBot.Application.Questions.Commands.DeleteUserQuestionsCommand;
 using ChatBot.Application.Questions.Commands.GetQuestionQuery;
 using ChatBot.Application.Questions.Commands.HelpfulQuestionCommand;
 using ChatBot.Application.Questions.Commands.LikeQuestionCommand;
 using ChatBot.Application.Questions.Queries.ListQuestionsQuery;
+using ChatBot.Common.Endpoints;
+using ChatBot.Common.RateLimiting;
 using ChatBot.Contracts.Requests;
 using ChatBot.Contracts.Responses;
 using MediatR;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatBot.Api.Endpoints;
 
-public class AskQuestionsEndpoint : IEndpoints
+public class QuestionsEndpoints : IEndpoints
 {
     private const string ContentType = "application/json";
     private const string Tag = "Questions";
@@ -28,10 +29,11 @@ public class AskQuestionsEndpoint : IEndpoints
             .WithDescription("Answers question defined by user")
             .Produces<CreateQuestionResponse>()
             .Produces(400)
+            .Produces(401)
             .Produces(503)
             .WithTags(Tag)
             .RequireRateLimiting(rateLimitingSettings.PolicyName)
-            .AllowAnonymous();
+            .RequireAuthorization();
         
         builder.MapGet("/{id}", GetQuestionDetailsAsync)
             .WithName("GetQuestionDetails")
@@ -52,15 +54,23 @@ public class AskQuestionsEndpoint : IEndpoints
         builder.MapPut("/{id}/likes", LikeQuestionAsync)
             .WithName("LikeQuestion")
             .Accepts<LikeQuestionRequest>(ContentType)
+            .Produces(401)
             .WithDescription("Likes question")
             .WithTags(Tag)
-            .AllowAnonymous();
+            .RequireAuthorization();
 
         builder.MapPut("/{id}/helpful", QuestionIsHelpfulAsync)
             .WithName("QuestionIsHelpful")
             .WithDescription("Marks question as helpful")
+            .Produces(401)
             .WithTags(Tag)
-            .AllowAnonymous();
+            .RequireAuthorization();
+
+        builder.MapDelete("/{authorEmail}", DeleteQuestionAsync)
+            .WithName("DeleteQuestion")
+            .WithDescription("Marks question as helpful")
+            .Produces(401)
+            .WithTags(Tag);
     }
     
     public static void AddService(IServiceCollection services, IConfiguration configuration)
@@ -71,10 +81,10 @@ public class AskQuestionsEndpoint : IEndpoints
         [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
     {
-        var result = await sender.Send(new AskQuestionCommand(request.Question), cancellationToken);
+        var result = await sender.Send(new AskQuestionCommand(request.Question, request.AuthorEmail), cancellationToken);
 
         return result.Match(
-            question => Results.Created($"{BaseRoute}/{question.Id}",new CreateQuestionResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes)),
+            question => Results.Created($"{BaseRoute}/{question.Id}",new CreateQuestionResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes, question.AuthorEmail)),
             error => Results.Problem(new ProblemDetails{Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description})
         );
     }
@@ -85,7 +95,7 @@ public class AskQuestionsEndpoint : IEndpoints
         var result = await sender.Send(new GetQuestionQuery(request.Id), cancellationToken);
 
         return result.Match(
-            question => Results.Ok(new GetQuestionDetailsResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes)),
+            question => Results.Ok(new GetQuestionDetailsResponse(question.Id, question.Title, question.Answer, question.Upvotes, question.Downvotes, question.AuthorEmail)),
             error => Results.Problem(new ProblemDetails{Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description})
         );
     }
@@ -115,7 +125,7 @@ public class AskQuestionsEndpoint : IEndpoints
             _ => Results.Ok(),            
             error => Results.Problem(new ProblemDetails
             {
-                Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description
+                Status = int.TryParse(error[0].Code, out var code) ? code : 400, Detail = error[0].Description
             }));
     }
 
@@ -127,7 +137,19 @@ public class AskQuestionsEndpoint : IEndpoints
             _ => Results.Ok(),
             error => Results.Problem(new ProblemDetails
             {
-                Status = int.TryParse(error.First().Code, out var code) ? code : 400, Detail = error.First().Description
+                Status = int.TryParse(error[0].Code, out var code) ? code : 400, Detail = error[0].Description
+            }));
+    }
+    
+    private static async Task<IResult> DeleteQuestionAsync([FromRoute] string authorEmail, [FromServices] ISender sender, CancellationToken cancellationToken = default)
+    {
+        var result = await sender.Send(new DeleteUserQuestionCommand(authorEmail), cancellationToken);
+
+        return result.Match(
+            _ => Results.Ok(),
+            error => Results.Problem(new ProblemDetails
+            {
+                Status = int.TryParse(error[0].Code, out var code) ? code : 400, Detail = error[0].Description
             }));
     }
 }

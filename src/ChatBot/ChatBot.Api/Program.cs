@@ -1,12 +1,19 @@
 using ChatBot.Api.Composition;
-using ChatBot.Api.Endpoints.Internal;
 using ChatBot.Infrastructure;
+using ChatBot.Common.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.RegisterDependencies();
+builder.WebHost.UseDefaultServiceProvider((context, options) =>
+{
+    options.ValidateScopes = true;
+    options.ValidateOnBuild = true;
+});
+
+using var loggerFactory =
+    LoggerFactory.Create(loggingBuilder => loggingBuilder.SetMinimumLevel(LogLevel.Information).AddConsole());
+
+builder.RegisterDependencies(loggerFactory.CreateLogger("Dependencies"));
 
 var app = builder.Build();
 
@@ -17,11 +24,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// app.UseAuthentication();
+// app.UseAuthorization();
 app.UseEndpoints<Program>();
 app.UseHttpsRedirection();
 app.UseCors();
 app.UseRateLimiter();
 app.AddInfrastructureMiddleware();
 
-app.Run();
+await app.RunAsync();
 

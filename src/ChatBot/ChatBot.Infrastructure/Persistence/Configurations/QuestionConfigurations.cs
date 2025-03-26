@@ -13,5 +13,7 @@ public class QuestionConfigurations : IEntityTypeConfiguration<Question>
         builder.HasIndex(q => q.CreatedAt);
 
         builder.HasIndex(q => q.HelpfulCount);
+        builder.HasIndex(q => q.AuthorEmail);
+        builder.HasQueryFilter(q => !q.IsDeleted);
     }
 }

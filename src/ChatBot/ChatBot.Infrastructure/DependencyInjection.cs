@@ -1,8 +1,6 @@
 using ChatBot.Application;
-using ChatBot.Domain;
 using ChatBot.Infrastructure.Persistence;
 using ChatBot.Infrastructure.Persistence.Repositories;
-using ChatBot.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,7 +9,7 @@ namespace ChatBot.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IHostApplicationBuilder RegisterInfrastructure(this IHostApplicationBuilder builder, string db)
+    public static IHostApplicationBuilder AddInfrastructure(this IHostApplicationBuilder builder, string db)
     {
         return builder
             .AddDbContext(db)
@@ -33,8 +31,6 @@ public static class DependencyInjection
 
     private static IHostApplicationBuilder AddPersistence(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddScoped<ITimeProvider, SystemTimeProvider>();
-
         builder.AddRepositories();
         
         return builder;
